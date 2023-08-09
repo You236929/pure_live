@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
-import 'package:ds_better_player/ds_better_player.dart';
+import 'package:better_player/better_player.dart';
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barrage/flutter_barrage.dart';

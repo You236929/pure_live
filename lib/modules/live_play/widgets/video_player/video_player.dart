@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ds_better_player/ds_better_player.dart';
+import 'package:better_player/better_player.dart';
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:get/get.dart';
 import 'package:pure_live/common/index.dart';
