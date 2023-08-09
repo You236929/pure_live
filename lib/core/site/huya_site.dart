@@ -134,6 +134,7 @@ class HuyaSite implements LiveSite {
 
         // 获取支持的线路
         links['原画'] = [];
+        // ignore: unused_local_variable
         for (var item in data['multiLine']) {
           links['原画']?.add(readUrl);
           for (var name in rates.keys) {

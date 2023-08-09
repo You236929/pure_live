@@ -49,6 +49,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.2"
+  better_player:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: Issue1057
+      resolved-ref: e45f447b6d3ae6a3404ddfd9663f8aeae864ddec
+      url: "https://kgithub.com/matthewrice345/betterplayer.git"
+    source: git
+    version: "0.0.83"
   boolean_selector:
     dependency: transitive
     description:
@@ -226,14 +235,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.8"
-  ds_better_player:
-    dependency: "direct main"
-    description:
-      name: ds_better_player
-      sha256: b5070e18e984ca7e118f6b63243679beb483c638b7980e573639302688185b55
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.89"
   dynamic_color:
     dependency: "direct main"
     description:
