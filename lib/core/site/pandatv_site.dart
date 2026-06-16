@@ -1,6 +1,6 @@
 import 'package:pure_live/common/index.dart';
 import 'package:pure_live/core/common/http_client.dart';
-import 'package:pure_live/core/danmaku/empty_danmaku.dart';
+import 'package:pure_live/core/danmaku/pandatv_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/site/site_helper.dart';
@@ -19,7 +19,7 @@ class PandaTvSite implements LiveSite {
   static const String apiUrl = 'https://api.pandalive.co.kr';
 
   @override
-  LiveDanmaku getDanmaku() => EmptyDanmaku();
+  LiveDanmaku getDanmaku() => PandaTvDanmaku();
 
   Map<String, String> get headers => {
     'Accept': '*/*',
@@ -66,8 +66,14 @@ class PandaTvSite implements LiveSite {
         header: headers,
       ));
       if (result['result'] != true) return detail.copyWith(status: false, liveStatus: LiveStatus.offline);
-      final room = _parseRoom(result['media'] ?? {});
+      final media = result['media'] ?? {};
+      final room = _parseRoom(media);
       room.data = result;
+      room.danmakuData = PandaTvDanmakuArgs(
+        roomId: roomId,
+        userId: media['userIdx']?.toString() ?? '',
+        token: result['token']?.toString() ?? '',
+      );
       return room;
     } catch (_) {
       return detail.copyWith(status: false, liveStatus: LiveStatus.offline);

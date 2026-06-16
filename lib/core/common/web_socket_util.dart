@@ -32,6 +32,9 @@ class WebScoketUtils {
 
   /// 请求头
   Map<String, dynamic>? headers;
+
+  /// WebSocket 子协议
+  List<String>? protocols;
   WebScoketUtils({
     required this.url,
     required this.heartBeatTime,
@@ -42,6 +45,7 @@ class WebScoketUtils {
     this.onHeartBeat,
     this.headers,
     this.backupUrl,
+    this.protocols,
   });
   IOWebSocketChannel? webSocket;
   Timer? heartBeatTimer;
@@ -62,7 +66,7 @@ class WebScoketUtils {
       if (backupUrl != null && backupUrl!.isNotEmpty && retry) {
         wsurl = backupUrl!;
       }
-      webSocket = IOWebSocketChannel.connect(wsurl, connectTimeout: const Duration(seconds: 10), headers: headers);
+      webSocket = IOWebSocketChannel.connect(wsurl, connectTimeout: const Duration(seconds: 10), headers: headers, protocols: protocols);
 
       await webSocket?.ready;
       ready();

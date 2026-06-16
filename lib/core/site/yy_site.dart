@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:pure_live/common/index.dart';
 import 'package:pure_live/core/common/http_client.dart';
-import 'package:pure_live/core/danmaku/empty_danmaku.dart';
+import 'package:pure_live/core/danmaku/yy_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/site/site_helper.dart';
@@ -18,7 +18,7 @@ class YYSite implements LiveSite {
   String name = 'YY';
 
   @override
-  LiveDanmaku getDanmaku() => EmptyDanmaku();
+  LiveDanmaku getDanmaku() => YyDanmaku();
 
   Map<String, String> get headers => {
     'Accept': '*/*',
@@ -192,6 +192,10 @@ class YYSite implements LiveSite {
       liveStatus: LiveStatus.live,
       status: true,
       platform: id,
+      danmakuData: YyDanmakuArgs(
+        topSid: int.tryParse(item['sid']?.toString() ?? '') ?? 0,
+        subSid: int.tryParse(item['ssid']?.toString() ?? '') ?? 0,
+      ),
     );
   }
 }

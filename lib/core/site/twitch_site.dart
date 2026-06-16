@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:pure_live/common/index.dart';
 import 'package:pure_live/core/common/http_client.dart';
-import 'package:pure_live/core/danmaku/empty_danmaku.dart';
+import 'package:pure_live/core/danmaku/twitch_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/site/site_helper.dart';
@@ -25,7 +25,7 @@ class TwitchSite implements LiveSite {
   final Map<String, String> _cursorMap = {};
 
   @override
-  LiveDanmaku getDanmaku() => EmptyDanmaku();
+  LiveDanmaku getDanmaku() => TwitchDanmaku();
 
   Map<String, String> get headers => {
     'user-agent': defaultUa,
