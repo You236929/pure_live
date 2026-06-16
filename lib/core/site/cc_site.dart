@@ -6,7 +6,7 @@ import 'package:pure_live/model/live_anchor_item.dart';
 import 'package:pure_live/core/common/http_client.dart';
 import 'package:pure_live/model/live_play_quality.dart';
 import 'package:pure_live/core/interface/live_site.dart';
-import 'package:pure_live/core/danmaku/empty_danmaku.dart';
+import 'package:pure_live/core/danmaku/cc_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 
 class CCSite implements LiveSite {
@@ -17,7 +17,7 @@ class CCSite implements LiveSite {
   String name = "网易CC直播";
 
   @override
-  LiveDanmaku getDanmaku() => EmptyDanmaku();
+  LiveDanmaku getDanmaku() => CCDanmaku();
   final String kUserAgent =
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36";
 
@@ -184,6 +184,9 @@ class CCSite implements LiveSite {
       String urlToGetReal = "https://cc.163.com/live/channel/?channelids=$channelId";
       var resultReal = await HttpClient.instance.getJson(urlToGetReal, queryParameters: {'anchor_ccid': roomId});
       var roomInfo = resultReal["data"][0];
+      final ccRoomId = int.tryParse(roomInfo["room_id"]?.toString() ?? '') ?? 0;
+      final ccChannelId = int.tryParse((roomInfo["channelid"] ?? channelId).toString()) ?? 0;
+      final ccGameType = int.tryParse(roomInfo["gametype"]?.toString() ?? '') ?? 0;
       return LiveRoom(
         cover: roomInfo["cover"],
         watching: roomInfo["follower_num"].toString(),
@@ -200,6 +203,7 @@ class CCSite implements LiveSite {
         link: roomInfo['m3u8'],
         userId: roomInfo['cid'].toString(),
         data: roomInfo["quickplay"] ?? roomInfo["stream_list"],
+        danmakuData: CCDanmakuArgs(roomId: ccRoomId, channelId: ccChannelId, gameType: ccGameType),
       );
     } catch (e) {
       LiveRoom liveRoom =
