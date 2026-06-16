@@ -1,0 +1,278 @@
+name: my-test-build
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "发布 Release 的 Tag（留空则读取 assets/version.json）"
+        required: false
+      ssh:
+        description: "SSH connection to Actions"
+        required: false
+        default: "false"
+  watch:
+    types: [started]
+  push:
+    branches:
+      - master
+      - main
+    paths-ignore:
+      - "**.md"
+      - ".github/**"
+      - "!.github/workflows/my-test-build.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-android:
+    runs-on: macos-latest
+    steps:
+      - name: 签出代码
+        uses: actions/checkout@v4
+
+      - name: 下载 Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: key.jks
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+
+      - name: 创建 key.properties
+        run: |
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+
+      - name: 设置 Java 环境
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: "17"
+          cache: gradle
+
+      - name: 设置 Flutter 环境
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: 更新 Flutter packages
+        run: flutter pub get
+
+      - name: 打包 APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-android
+          path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 7
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: 签出代码
+        uses: actions/checkout@v4
+
+      - name: Decode MSIX Certificate
+        shell: pwsh
+        run: |
+          $certBase64 = "${{ secrets.CERTIFICATE }}".Trim() -replace '\s+', ''
+
+          if (-not [string]::IsNullOrEmpty($certBase64)) {
+            $certBytes = [System.Convert]::FromBase64String($certBase64)
+            $certPath = Join-Path -Path (Get-Location) -ChildPath "certificate.pfx"
+            [IO.File]::WriteAllBytes($certPath, $certBytes)
+            "FINAL_CERT_PATH=$certPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+
+      - name: Update make_config.yaml
+        if: env.FINAL_CERT_PATH != ''
+        shell: pwsh
+        run: |
+          $configPath = "windows/packaging/msix/make_config.yaml"
+          $absolutePath = $env:FINAL_CERT_PATH -replace '\\', '/'
+
+          if (Test-Path $configPath) {
+            $content = Get-Content $configPath -Raw
+            $content = $content -replace 'certificate_path:\s*.*', "certificate_path: $absolutePath"
+            Set-Content $configPath $content
+          }
+
+      - name: 设置 Flutter 环境
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: 启用 Flutter Windows
+        run: flutter config --enable-windows-desktop
+
+      - name: 更新 Flutter packages
+        run: flutter pub get
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          $url = "https://jrsoftware.org/download.php/is.exe"
+          $output = "${{ runner.temp }}\innosetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process -FilePath $output -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART" -Wait
+          "C:\Program Files (x86)\Inno Setup 6" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Copy Chinese language pack
+        shell: pwsh
+        run: |
+          $source = "windows\packaging\exe\ChineseSimplified.isl"
+          $target = "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+
+          if (Test-Path $source) {
+            Copy-Item $source $target -Force
+          }
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Package Windows
+        run: fastforge package --platform windows --targets exe,msix
+
+      - name: 上传 Windows 安装包
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-windows
+          path: |
+            dist/**/*.exe
+            dist/**/*.msix
+          retention-days: 7
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 签出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Flutter 环境
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: 启用 Flutter Linux
+        run: flutter config --enable-linux-desktop
+
+      - name: 安装 Linux 依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev mpv libasound2-dev
+
+      - name: 更新 Flutter packages
+        run: flutter pub get
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Package Linux
+        run: fastforge package --platform linux --targets deb,zip
+
+      - name: 上传 Linux 安装包
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-linux
+          path: |
+            dist/**/*.deb
+            dist/**/*.zip
+          retention-days: 7
+
+  upload-release:
+    runs-on: ubuntu-latest
+    needs:
+      - build-android
+      - build-windows
+      - build-linux
+    permissions:
+      contents: write
+    steps:
+      - name: 签出代码
+        uses: actions/checkout@v4
+
+      - name: 下载所有构建产物
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: artifact-*
+          merge-multiple: true
+
+      - name: 读取版本描述
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: assets/version.json
+
+      - name: 计算 Release Tag
+        id: tag
+        run: |
+          if [ -n "${{ github.event.inputs.tag_name }}" ]; then
+            echo "tag=${{ github.event.inputs.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ fromJson(steps.version.outputs.content).version }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 构建 Release Body
+        id: release_body
+        run: |
+          cat << 'EOF' > release_body.txt
+
+          # 纯粹直播 ${{ steps.tag.outputs.tag }}
+          |版本|下载地址|
+          |---|---|
+          |TV版|[pure_live_TV](https://github.com/liuchuancong/pure_live_TV/releases/latest)|
+          |Windows/macOS/Android版|[pure_live](https://github.com/liuchuancong/pure_live/releases/latest)|
+
+          ### 🖥️ Windows 版
+          - **EXE 安装包**：适合所有用户，自动创建快捷方式
+          - **MSIX 包**：现代应用格式，支持干净卸载（需 Windows 10/11）
+          - 适配：Win10/11 (x64)，自动创建桌面快捷方式
+          - 功能：多直播源、WebDAV、弹幕显示
+          - 快捷键：空格(播放/暂停) \| ESC(全屏切换) \| 上下键(音量) \| R(刷新)
+
+          ### 🐧 Linux 版
+          - **DEB 包**：适合 Debian / Ubuntu 系发行版
+          - **ZIP 包**：通用压缩包，适合手动解压运行
+
+          ### 📱 Android 版
+          适配：Android 6.0+ | 功能：WebDAV、多播放器切换、弹幕、应用内更新
+
+          ### 📺 TV 版
+          适配：Android TV 6.0+ | 功能：直播源同步、多播放器、弹幕、应用内更新
+
+          ### 📝 本次更新
+
+          ${{ fromJson(steps.version.outputs.content).version_desc }}
+
+          EOF
+
+          echo "body_path=$(pwd)/release_body.txt" >> $GITHUB_OUTPUT
+
+      - name: 上传至 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          body_path: ${{ steps.release_body.outputs.body_path }}
+          prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
+          generate_release_notes: false
+          append_body: false
+          make_latest: true
+          fail_on_unmatched_files: false
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 输出状态
+        if: always()
+        run: 'echo "✅ Release published with status: ${{ job.status }}"'
