@@ -28,6 +28,15 @@ class FavoriteRoomController extends GetxController {
     },
   );
 
+  @override
+  void onInit() {
+    super.onInit();
+    final missingSites = AppConsts.supportSites.where((site) => !hotAreasList.contains(site)).toList();
+    if (missingSites.isNotEmpty) {
+      hotAreasList.v = [...hotAreasList.v, ...missingSites];
+    }
+  }
+
   bool isFavorite(LiveRoom room) => favoriteRooms.v.any((e) => e.roomId == room.roomId);
   bool isFavoriteArea(LiveArea area) => favoriteAreas.v.any((e) => e.areaId == area.areaId);
 
