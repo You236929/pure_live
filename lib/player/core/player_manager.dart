@@ -598,7 +598,12 @@ class PlayerManager {
                       ),
                       child: ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: livePlayController.detail.value?.avatar ?? '',
+                          imageUrl: ImageProxyUtil.proxyImageUrl(
+                            livePlayController.detail.value?.avatar ?? '',
+                            siteKey: livePlayController.detail.value?.platform,
+                            width: 96,
+                            height: 96,
+                          ),
                           cacheManager: CustomImageCacheManager.instance,
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) =>

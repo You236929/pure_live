@@ -19,6 +19,7 @@ class HttpClient {
   static const String _errorDownload = "下载请求失败";
   static const String _errorDownloadFailed = "下载失败";
   static const String _errorDownloadCancel = "下载已取消";
+  static const String _siteApiProxyHost = "proxy.moonchan.xyz";
 
   HttpClient._();
   static final HttpClient instance = HttpClient._();
@@ -55,6 +56,40 @@ class HttpClient {
     oldDio.close(force: false);
   }
 
+  Map<String, dynamic> _copyQueryParameters(Map<String, dynamic>? queryParameters) {
+    return queryParameters == null ? <String, dynamic>{} : Map<String, dynamic>.from(queryParameters);
+  }
+
+  String _findEnabledApiProxySiteKey() {
+    try {
+      final stack = StackTrace.current.toString();
+      final enabledSites = SettingsService.to.proxy.apiProxySites;
+      for (final siteKey in enabledSites) {
+        final patterns = [
+          RegExp('/${RegExp.escape(siteKey)}_site\\.dart'),
+          RegExp('/${RegExp.escape(siteKey)}_danmaku\\.dart'),
+          RegExp('/${RegExp.escape(siteKey)}_site_mixin\\.dart'),
+          RegExp('/utils/${RegExp.escape(siteKey)}/'),
+          RegExp('/${RegExp.escape(siteKey)}_utils\\.dart'),
+        ];
+        if (patterns.any((pattern) => pattern.hasMatch(stack))) {
+          return siteKey;
+        }
+      }
+    } catch (_) {}
+    return "";
+  }
+
+  String _siteApiProxyUrl(String url, Map<String, dynamic> queryParameters) {
+    final siteKey = _findEnabledApiProxySiteKey();
+    if (siteKey.isEmpty) return url;
+    final uri = Uri.tryParse(url);
+    if (uri == null || uri.host.isEmpty || uri.host == _siteApiProxyHost) return url;
+    queryParameters["proxy_host"] = uri.host;
+    queryParameters["proxy_referer"] = "${uri.scheme.isEmpty ? 'https' : uri.scheme}://${uri.host}/";
+    return url.replaceFirst(uri.host, _siteApiProxyHost);
+  }
+
   Future<String> getText(
     String url, {
     Map<String, dynamic>? queryParameters,
@@ -62,9 +97,10 @@ class HttpClient {
     CancelToken? cancel,
   }) async {
     try {
+      final query = _copyQueryParameters(queryParameters);
       final result = await dio.get(
-        url,
-        queryParameters: queryParameters,
+        _siteApiProxyUrl(url, query),
+        queryParameters: query,
         options: Options(responseType: ResponseType.plain, headers: header),
         cancelToken: cancel,
       );
@@ -81,9 +117,10 @@ class HttpClient {
     CancelToken? cancel,
   }) async {
     try {
+      final query = _copyQueryParameters(queryParameters);
       final result = await dio.get(
-        url,
-        queryParameters: queryParameters,
+        _siteApiProxyUrl(url, query),
+        queryParameters: query,
         options: Options(responseType: ResponseType.json, headers: header),
         cancelToken: cancel,
       );
@@ -100,9 +137,10 @@ class HttpClient {
     CancelToken? cancel,
   }) async {
     try {
+      final query = _copyQueryParameters(queryParameters);
       final result = await dio.get(
-        url,
-        queryParameters: queryParameters,
+        _siteApiProxyUrl(url, query),
+        queryParameters: query,
         options: Options(responseType: ResponseType.json, headers: header),
         cancelToken: cancel,
       );
@@ -121,9 +159,10 @@ class HttpClient {
     CancelToken? cancel,
   }) async {
     try {
+      final query = _copyQueryParameters(queryParameters);
       final result = await dio.post(
-        url,
-        queryParameters: queryParameters,
+        _siteApiProxyUrl(url, query),
+        queryParameters: query,
         data: data,
         options: Options(
           responseType: ResponseType.json,
@@ -145,9 +184,10 @@ class HttpClient {
     CancelToken? cancel,
   }) async {
     try {
+      final query = _copyQueryParameters(queryParameters);
       final result = await dio.head(
-        url,
-        queryParameters: queryParameters,
+        _siteApiProxyUrl(url, query),
+        queryParameters: query,
         options: Options(headers: header, receiveDataWhenStatusError: true),
         cancelToken: cancel,
       );
@@ -167,6 +207,7 @@ class HttpClient {
     CancelToken? cancel,
     Function(int value, int progress)? onReceiveProgress,
   }) async {
+    final query = <String, dynamic>{};
     final tempPath = "$savePath.part";
     final tempFile = io.File(tempPath);
 
@@ -175,8 +216,9 @@ class HttpClient {
         await tempFile.create(recursive: true);
       }
       final response = await dio.download(
-        url,
+        _siteApiProxyUrl(url, query),
         tempPath,
+        queryParameters: query,
         cancelToken: cancel,
         onReceiveProgress: onReceiveProgress,
         options: Options(headers: header),

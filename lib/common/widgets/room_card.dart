@@ -615,7 +615,7 @@ class RoomCard extends StatelessWidget {
 
                     child: room.platform == Sites.iptvSite
                         ? CachedNetworkImage(
-                            imageUrl: room.cover!,
+                            imageUrl: ImageProxyUtil.proxyImageUrl(room.cover!, siteKey: room.platform, width: 300, height: 169),
                             cacheManager: CustomImageCacheManager.instance,
                             fit: BoxFit.cover,
                             fadeInDuration: const Duration(milliseconds: 250),
@@ -649,7 +649,7 @@ class RoomCard extends StatelessWidget {
                             },
                           )
                         : CachedNetworkImage(
-                            imageUrl: room.cover!,
+                            imageUrl: ImageProxyUtil.proxyImageUrl(room.cover!, siteKey: room.platform, width: 300, height: 169),
                             cacheManager: CustomImageCacheManager.instance,
                             fit: BoxFit.cover,
                             fadeInDuration: const Duration(milliseconds: 250),
@@ -707,7 +707,7 @@ class RoomCard extends StatelessWidget {
               minLeadingWidth: dense ? 34 : 40,
               contentPadding: EdgeInsets.symmetric(horizontal: dense ? 10 : 12, vertical: dense ? 4 : 6),
               horizontalTitleGap: dense ? 8 : 12,
-              leading: CommonAvatar(avatarUrl: room.avatar, fallbackName: room.nick, dense: dense),
+              leading: CommonAvatar(avatarUrl: room.avatar, siteKey: room.platform, fallbackName: room.nick, dense: dense),
               title: Text(
                 room.title ?? '',
                 maxLines: 1,

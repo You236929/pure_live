@@ -511,7 +511,10 @@ mixin DesktopWindowMixin<T extends StatefulWidget> on State<T>
                     CircleAvatar(
                       radius: 24,
                       backgroundImage: room.avatar != null && room.avatar!.isNotEmpty
-                          ? CachedNetworkImageProvider(room.avatar!, cacheManager: CustomImageCacheManager.instance)
+                          ? CachedNetworkImageProvider(
+                              ImageProxyUtil.proxyImageUrl(room.avatar!, siteKey: room.platform, width: 96, height: 96),
+                              cacheManager: CustomImageCacheManager.instance,
+                            )
                           : null,
                       child: room.avatar == null || room.avatar!.isEmpty ? const Icon(Icons.person) : null,
                     ),
