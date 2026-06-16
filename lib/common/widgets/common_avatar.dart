@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:pure_live/common/utils/image_proxy_util.dart';
 import 'package:pure_live/plugins/cache_manager.dart';
 
 class CommonAvatar extends StatelessWidget {
   final String? avatarUrl;
+  final String? siteKey;
   final bool dense;
   final double? radius;
   final String? fallbackName;
-  const CommonAvatar({super.key, required this.avatarUrl, this.dense = false, this.radius, this.fallbackName});
+  const CommonAvatar({super.key, required this.avatarUrl, this.siteKey, this.dense = false, this.radius, this.fallbackName});
   @override
   Widget build(BuildContext context) {
     final double r = radius ?? (dense ? 17.0 : 20.0);
@@ -36,7 +38,7 @@ class CommonAvatar extends StatelessWidget {
       height: size,
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl: avatarUrl!,
+          imageUrl: ImageProxyUtil.proxyImageUrl(avatarUrl!, siteKey: siteKey, width: size.toInt(), height: size.toInt()),
           cacheManager: CustomImageCacheManager.instance,
           fit: BoxFit.cover,
           placeholder: (_, _) => Container(color: Theme.of(context).disabledColor.withValues(alpha: 0.2)),

@@ -151,6 +151,30 @@ class _NetworkProxySettingsPageState extends State<NetworkProxySettingsPage> {
               ],
             ]),
             const SizedBox(height: 24),
+            context.buildGroupTitle(i18n("site_proxy_group_title")),
+            context.buildModernCard([
+              context.buildTile(
+                icon: Remix.image_2_line,
+                title: i18n("image_proxy_sites"),
+                subtitle: _selectedSitesSubtitle(proxyCtrl.imageProxySites.v),
+                onTap: () => _showSiteProxySelector(
+                  title: i18n("image_proxy_sites"),
+                  description: i18n("image_proxy_sites_desc"),
+                  selectedSites: proxyCtrl.imageProxySites,
+                ),
+              ),
+              context.buildTile(
+                icon: Remix.cloud_line,
+                title: i18n("api_proxy_sites"),
+                subtitle: _selectedSitesSubtitle(proxyCtrl.apiProxySites.v),
+                onTap: () => _showSiteProxySelector(
+                  title: i18n("api_proxy_sites"),
+                  description: i18n("api_proxy_sites_desc"),
+                  selectedSites: proxyCtrl.apiProxySites,
+                ),
+              ),
+            ]),
+            const SizedBox(height: 24),
             context.buildGroupTitle(i18n("ssl_group_title")),
             context.buildModernCard([
               SwitchListTile(
@@ -165,6 +189,74 @@ class _NetworkProxySettingsPageState extends State<NetworkProxySettingsPage> {
           ],
         );
       }),
+    );
+  }
+
+  String _selectedSitesSubtitle(List<String> selectedIds) {
+    if (selectedIds.isEmpty) return i18n("site_proxy_none");
+    if (selectedIds.length >= Sites.supportSites.length) return i18n("site_proxy_all");
+    return Sites.supportSites
+        .where((site) => selectedIds.contains(site.id))
+        .map((site) => site.name)
+        .join("、");
+  }
+
+  Future<void> _showSiteProxySelector({
+    required String title,
+    required String description,
+    required RxList<String> selectedSites,
+  }) async {
+    await Get.dialog<void>(
+      AlertDialog(
+        title: Text(title),
+        content: SizedBox(
+          width: 420,
+          child: Obx(
+            () => SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(description, style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () => selectedSites.v = Sites.supportSites.map((site) => site.id).toList(),
+                        child: Text(i18n("select_all")),
+                      ),
+                      TextButton(
+                        onPressed: () => selectedSites.v = [],
+                        child: Text(i18n("select_none")),
+                      ),
+                    ],
+                  ),
+                  ...Sites.supportSites.map((site) {
+                    final selected = selectedSites.contains(site.id);
+                    return CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      value: selected,
+                      title: Text(site.name),
+                      onChanged: (value) {
+                        final next = List<String>.from(selectedSites);
+                        if (value == true) {
+                          if (!next.contains(site.id)) next.add(site.id);
+                        } else {
+                          next.remove(site.id);
+                        }
+                        selectedSites.v = next;
+                      },
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(Get.context!), child: Text(i18n("done"))),
+        ],
+      ),
     );
   }
 }

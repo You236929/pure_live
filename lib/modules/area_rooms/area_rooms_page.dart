@@ -84,7 +84,12 @@ class FavoriteAreaFloatingButton extends StatelessWidget {
       child: ClipOval(
         child: hasPic
             ? CachedNetworkImage(
-                imageUrl: area.areaPic!,
+                imageUrl: ImageProxyUtil.proxyImageUrl(
+                  area.areaPic!,
+                  siteKey: area.platform,
+                  width: 64,
+                  height: 64,
+                ),
                 cacheManager: CustomImageCacheManager.instance,
                 width: 32,
                 height: 32,

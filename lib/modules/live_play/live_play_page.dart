@@ -106,7 +106,15 @@ class LivePlayPage extends GetView<LivePlayController> {
 
               return CircleAvatar(
                 foregroundImage: avatar != null && avatar.isNotEmpty
-                    ? CachedNetworkImageProvider(avatar, cacheManager: CustomImageCacheManager.instance)
+                    ? CachedNetworkImageProvider(
+                        ImageProxyUtil.proxyImageUrl(
+                          avatar,
+                          siteKey: controller.detail.value?.platform,
+                          width: 64,
+                          height: 64,
+                        ),
+                        cacheManager: CustomImageCacheManager.instance,
+                      )
                     : null,
                 radius: 16,
                 backgroundColor: Theme.of(context).disabledColor,
