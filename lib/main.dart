@@ -9,11 +9,16 @@ import 'package:pure_live/player/utils/player_consts.dart';
 import 'package:pure_live/player/models/player_engine.dart';
 import 'package:pure_live/common/global/platform_utils.dart';
 import 'package:pure_live/routes/route_observer_controller.dart';
+import 'package:pure_live/core/common/global_http_overrides.dart';
 import 'package:pure_live/core/iptv/services/epg_import_manager.dart';
 import 'package:pure_live/common/global/platform/desktop_manager.dart';
 import 'package:pure_live/core/iptv/services/iptv_import_manager.dart';
 
 void main(List<String> args) async {
+  // 在任何网络请求之前装入全局 HttpOverrides，
+  // 这样所有基于 dart:io HttpClient 的网络请求都会遵循"去除 SSL 验证"开关
+  HttpOverrides.global = AppHttpOverrides();
+
   await AppInitializer().initialize(args);
 
   runApp(
