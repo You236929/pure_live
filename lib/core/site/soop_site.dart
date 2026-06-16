@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:pure_live/common/index.dart';
 import 'package:pure_live/core/common/http_client.dart';
-import 'package:pure_live/core/danmaku/empty_danmaku.dart';
+import 'package:pure_live/core/danmaku/soop_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/site/site_helper.dart';
@@ -18,7 +18,7 @@ class SoopSite implements LiveSite {
   String name = 'SOOP直播';
 
   @override
-  LiveDanmaku getDanmaku() => EmptyDanmaku();
+  LiveDanmaku getDanmaku() => SoopDanmaku();
 
   Map<String, String> get headers => {
     'Accept': '*/*',
@@ -115,6 +115,7 @@ class SoopSite implements LiveSite {
   Future<LiveRoom> getRoomDetail({required String roomId, required String platform}) async {
     final detail = LiveRoom(roomId: roomId, platform: platform);
     try {
+      final danmakuArgsFuture = _getDanmakuArgs(roomId);
       final result = decodeJson(await HttpClient.instance.postJson(
         'http://api.m.sooplive.co.kr/broad/a/watch',
         formUrlEncoded: true,
@@ -149,6 +150,7 @@ class SoopSite implements LiveSite {
         platform: id,
         link: jsonObj['share']?['url']?.toString() ?? '',
         data: {'viewpreset': jsonObj['viewpreset'] ?? []},
+        danmakuData: await danmakuArgsFuture,
       );
     } catch (_) {
       return detail.copyWith(status: false, liveStatus: LiveStatus.offline);
@@ -267,6 +269,36 @@ class SoopSite implements LiveSite {
       header: headers,
     ));
     return result['CHANNEL']?['AID']?.toString() ?? '';
+  }
+
+  Future<SoopDanmakuArgs?> _getDanmakuArgs(String roomId) async {
+    try {
+      final result = decodeJson(await HttpClient.instance.postJson(
+        'https://live.sooplive.co.kr/afreeca/player_live_api.php',
+        formUrlEncoded: true,
+        queryParameters: {'bjid': roomId},
+        data: {
+          'bid': roomId,
+          'bno': '',
+          'type': 'live',
+          'pwd': '',
+          'player_type': 'html5',
+          'stream_type': 'common',
+          'quality': 'HD',
+          'mode': 'landing',
+          'from_api': '0',
+          'is_revive': 'false',
+        },
+        header: headers,
+      ));
+      final channel = result['CHANNEL'] ?? {};
+      final chatNo = channel['CHATNO']?.toString() ?? '';
+      final chatDomain = channel['CHDOMAIN']?.toString() ?? '';
+      if (chatNo.isEmpty || chatDomain.isEmpty) return null;
+      return SoopDanmakuArgs(url: 'wss://$chatDomain:9001/Websocket/$roomId', chatNo: chatNo);
+    } catch (_) {
+      return null;
+    }
   }
 
   String _avatarUrl(String roomId) {
