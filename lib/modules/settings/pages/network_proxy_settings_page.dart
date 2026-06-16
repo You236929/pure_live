@@ -150,6 +150,17 @@ class _NetworkProxySettingsPageState extends State<NetworkProxySettingsPage> {
                 ),
               ],
             ]),
+            const SizedBox(height: 24),
+            context.buildGroupTitle(i18n("ssl_group_title")),
+            context.buildModernCard([
+              SwitchListTile(
+                secondary: Icon(Remix.shield_keyhole_line, color: theme.colorScheme.primary),
+                title: Text(i18n("disable_ssl_verify")),
+                subtitle: Text(i18n("disable_ssl_verify_desc")),
+                value: proxyCtrl.disableSslVerify.v,
+                onChanged: (val) => proxyCtrl.disableSslVerify.v = val,
+              ),
+            ]),
             const SizedBox(height: 32),
           ],
         );

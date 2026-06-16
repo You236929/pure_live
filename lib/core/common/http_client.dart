@@ -39,6 +39,11 @@ class HttpClient {
             return 'DIRECT';
           };
 
+          // 去除 SSL 验证（默认开启）：跳过证书校验
+          if (SettingsService.to.proxy.disableSslVerify.value) {
+            client.badCertificateCallback = (io.X509Certificate cert, String host, int port) => true;
+          }
+
           return client;
         },
       );

@@ -10,6 +10,12 @@ class ProxySettingsController extends GetxController {
   final RxBool enableAppProxy = hiveBool('enableAppProxy', false);
   final RxString appProxyHost = hiveString('appProxyHost', '');
   final RxInt appProxyPort = hiveInt('appProxyPort', 7897);
+
+  // 去除 SSL 验证（默认开启）
+  // When true, the application will skip SSL/TLS certificate verification
+  // for both Dio HTTP client and the player kernel (mpv).
+  final RxBool disableSslVerify = hiveBool('disableSslVerify', true);
+
   @override
   void onInit() {
     super.onInit();
@@ -17,6 +23,7 @@ class ProxySettingsController extends GetxController {
     ever<bool>(enableAppProxy, (_) => _refreshDioConnections());
     ever<String>(appProxyHost, (_) => _refreshDioConnections());
     ever<int>(appProxyPort, (_) => _refreshDioConnections());
+    ever<bool>(disableSslVerify, (_) => _refreshDioConnections());
   }
 
   void _refreshDioConnections() {
@@ -33,6 +40,7 @@ class ProxySettingsController extends GetxController {
       'enableAppProxy': enableAppProxy.v,
       'appProxyHost': appProxyHost.v,
       'appProxyPort': appProxyPort.v,
+      'disableSslVerify': disableSslVerify.v,
     };
   }
 
@@ -43,6 +51,7 @@ class ProxySettingsController extends GetxController {
     enableAppProxy.v = json['enableAppProxy'] ?? false;
     appProxyHost.v = json['appProxyHost'] ?? '';
     appProxyPort.v = json['appProxyPort'] ?? 1080;
+    disableSslVerify.v = json['disableSslVerify'] ?? true;
   }
 
   static Map<String, dynamic> extractConfig(Map<String, dynamic>? rootConfig) {
@@ -54,6 +63,7 @@ class ProxySettingsController extends GetxController {
       'enableAppProxy': proxy['enableAppProxy'] ?? false,
       'appProxyHost': proxy['appProxyHost'] ?? '',
       'appProxyPort': proxy['appProxyPort'] ?? 7897,
+      'disableSslVerify': proxy['disableSslVerify'] ?? true,
     };
   }
 
