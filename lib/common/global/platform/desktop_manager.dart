@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pure_live/common/index.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import 'package:pure_live/plugins/utils.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -509,7 +511,7 @@ mixin DesktopWindowMixin<T extends StatefulWidget> on State<T>
                     CircleAvatar(
                       radius: 24,
                       backgroundImage: room.avatar != null && room.avatar!.isNotEmpty
-                          ? NetworkImage(room.avatar!)
+                          ? CachedNetworkImageProvider(room.avatar!, cacheManager: CustomImageCacheManager.instance)
                           : null,
                       child: room.avatar == null || room.avatar!.isEmpty ? const Icon(Icons.person) : null,
                     ),

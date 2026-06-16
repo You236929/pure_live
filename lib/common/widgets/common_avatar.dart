@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 
 class CommonAvatar extends StatelessWidget {
   final String? avatarUrl;
@@ -36,6 +37,7 @@ class CommonAvatar extends StatelessWidget {
       child: ClipOval(
         child: CachedNetworkImage(
           imageUrl: avatarUrl!,
+          cacheManager: CustomImageCacheManager.instance,
           fit: BoxFit.cover,
           placeholder: (_, _) => Container(color: Theme.of(context).disabledColor.withValues(alpha: 0.2)),
           errorWidget: (_, _, _) => fallback(),

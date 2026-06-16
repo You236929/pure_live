@@ -14,6 +14,7 @@ import 'package:pure_live/recorder/models/record_status.dart';
 import 'package:pure_live/modules/live_play/danmaku_tab.dart';
 import 'package:pure_live/modules/live_play/player_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import 'package:pure_live/common/utils/share_command_handler.dart';
 import 'package:pure_live/modules/live_play/live_play_controller.dart';
 import 'package:pure_live/modules/live_play/widgets/video_keyboard.dart';
@@ -104,7 +105,9 @@ class LivePlayPage extends GetView<LivePlayController> {
               final avatar = controller.detail.value?.avatar;
 
               return CircleAvatar(
-                foregroundImage: avatar != null && avatar.isNotEmpty ? CachedNetworkImageProvider(avatar) : null,
+                foregroundImage: avatar != null && avatar.isNotEmpty
+                    ? CachedNetworkImageProvider(avatar, cacheManager: CustomImageCacheManager.instance)
+                    : null,
                 radius: 16,
                 backgroundColor: Theme.of(context).disabledColor,
               );
