@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pure_live/common/index.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:pure_live/common/widgets/keep_alive_wrapper.dart';
 
@@ -81,12 +83,13 @@ class FavoriteAreaFloatingButton extends StatelessWidget {
       decoration: BoxDecoration(shape: BoxShape.circle, color: theme.colorScheme.primaryContainer),
       child: ClipOval(
         child: hasPic
-            ? Image.network(
-                area.areaPic!,
+            ? CachedNetworkImage(
+                imageUrl: area.areaPic!,
+                cacheManager: CustomImageCacheManager.instance,
                 width: 32,
                 height: 32,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorWidget: (context, url, error) {
                   return Center(
                     child: Text(
                       firstChar,

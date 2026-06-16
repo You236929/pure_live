@@ -42,6 +42,41 @@ class CacheDataSettingsPage extends StatelessWidget {
                 ),
               );
             }),
+            // 图片缓存：单独显示大小并提供清除入口
+            Obx(() {
+              final imgSize = SettingsService.to.cache.imageCacheSizeMB.value;
+              return context.buildTile(
+                icon: Remix.image_2_line,
+                title: i18n("clear_image_cache"),
+                subtitle: i18n("clear_image_cache_desc"),
+                trailing: Text(
+                  "${imgSize.toStringAsFixed(2)} MB",
+                  style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
+                ),
+                onTap: () async {
+                  final ok = await Get.dialog<bool>(
+                    AlertDialog(
+                      title: Text(i18n("confirm_clear_image_cache")),
+                      content: Text(i18n("confirm_clear_image_cache_desc")),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(Get.context!, false),
+                          child: Text(i18n("cancel")),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(Get.context!, true),
+                          child: Text(i18n("clear"), style: TextStyle(color: theme.colorScheme.error)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok == true) {
+                    await SettingsService.to.cache.clearImageCache();
+                    Get.snackbar(i18n("done"), i18n("image_cache_cleared"), snackPosition: SnackPosition.bottom);
+                  }
+                },
+              );
+            }),
             context.buildTile(
               icon: Remix.delete_bin_6_line,
               title: i18n("clear_all_cache"),

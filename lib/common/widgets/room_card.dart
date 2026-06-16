@@ -648,29 +648,28 @@ class RoomCard extends StatelessWidget {
                               );
                             },
                           )
-                        : Image.network(
-                            room.cover!,
+                        : CachedNetworkImage(
+                            imageUrl: room.cover!,
+                            cacheManager: CustomImageCacheManager.instance,
                             fit: BoxFit.cover,
-                            gaplessPlayback: false,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                color: isDark ? Colors.grey[850] : Colors.grey[100],
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: AppStatusView(
-                                      type: AppStatusType.loading,
-                                      title: "",
-                                      subtitle: "",
-                                      isMini: true,
-                                    ),
+                            fadeInDuration: const Duration(milliseconds: 250),
+                            fadeOutDuration: const Duration(milliseconds: 250),
+                            placeholder: (context, url) => Container(
+                              color: isDark ? Colors.grey[850] : Colors.grey[100],
+                              child: const Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: AppStatusView(
+                                    type: AppStatusType.loading,
+                                    title: "",
+                                    subtitle: "",
+                                    isMini: true,
                                   ),
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
+                              ),
+                            ),
+                            errorWidget: (context, url, error) {
                               return Container(
                                 color: isDark ? Colors.grey[850] : Colors.grey[100],
                                 child: AppStatusView(type: AppStatusType.error, title: "", subtitle: "", isMini: true),

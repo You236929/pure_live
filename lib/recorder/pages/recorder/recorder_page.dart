@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:remixicon/remixicon.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pure_live/common/index.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import 'package:pure_live/routes/app_navigation.dart';
 import 'package:pure_live/recorder/models/record_status.dart';
 import 'package:pure_live/recorder/models/live_record_task.dart';
@@ -243,7 +245,10 @@ class _TaskCard extends GetView<RecorderController> {
             width: 150,
             height: 90,
             decoration: BoxDecoration(
-              image: DecorationImage(image: NetworkImage(task.cover), fit: BoxFit.cover),
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(task.cover, cacheManager: CustomImageCacheManager.instance),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Positioned(
@@ -501,7 +506,12 @@ class _TaskCard extends GetView<RecorderController> {
                           children: [
                             CircleAvatar(
                               radius: 12,
-                              backgroundImage: task.avatar.isNotEmpty ? NetworkImage(task.avatar) : null,
+                              backgroundImage: task.avatar.isNotEmpty
+                                  ? CachedNetworkImageProvider(
+                                      task.avatar,
+                                      cacheManager: CustomImageCacheManager.instance,
+                                    )
+                                  : null,
                             ),
                             const SizedBox(width: 7),
                             Expanded(

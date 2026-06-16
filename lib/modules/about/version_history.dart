@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:remixicon/remixicon.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pure_live/common/index.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import 'package:markdown_widget/widget/all.dart';
 import 'package:pure_live/plugins/race_http.dart';
 import 'package:markdown_widget/config/configs.dart';
@@ -376,7 +378,7 @@ class _VersionAuthorHeaderWidget extends StatelessWidget {
         CircleAvatar(
           radius: 18,
           backgroundColor: theme.colorScheme.surfaceContainerHighest,
-          backgroundImage: NetworkImage(item.author.avatar),
+          backgroundImage: CachedNetworkImageProvider(item.author.avatar, cacheManager: CustomImageCacheManager.instance),
         ),
         const SizedBox(width: 12),
         Expanded(

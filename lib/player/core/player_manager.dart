@@ -12,7 +12,9 @@ import '../models/player_exception.dart';
 import 'package:remixicon/remixicon.dart';
 import '../models/player_error_type.dart';
 import 'package:rxdart/rxdart.dart' hide Rx;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pure_live/common/index.dart';
+import 'package:pure_live/plugins/cache_manager.dart';
 import '../interface/unified_player_interface.dart';
 import 'package:pure_live/routes/app_navigation.dart';
 import 'package:pure_live/player/utils/fullscreen.dart';
@@ -595,10 +597,11 @@ class PlayerManager {
                         ],
                       ),
                       child: ClipOval(
-                        child: Image.network(
-                          livePlayController.detail.value?.avatar ?? '',
+                        child: CachedNetworkImage(
+                          imageUrl: livePlayController.detail.value?.avatar ?? '',
+                          cacheManager: CustomImageCacheManager.instance,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
+                          errorWidget: (context, url, error) =>
                               const Icon(Remix.user_3_line, color: Colors.white24),
                         ),
                       ),
