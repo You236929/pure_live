@@ -26,6 +26,21 @@ class PandaTvDanmaku implements LiveDanmaku {
   @override
   Function()? onReady;
 
+  bool _connected = false;
+
+  @override
+  bool get isConnected => _connected;
+
+  @override
+  void markConnected() {
+    _connected = true;
+  }
+
+  @override
+  void markDisconnected() {
+    _connected = false;
+  }
+
   WebScoketUtils? webScoketUtils;
   int _sendId = 1;
 
