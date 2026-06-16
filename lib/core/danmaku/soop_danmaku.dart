@@ -24,6 +24,21 @@ class SoopDanmaku implements LiveDanmaku {
   @override
   Function()? onReady;
 
+  bool _connected = false;
+
+  @override
+  bool get isConnected => _connected;
+
+  @override
+  void markConnected() {
+    _connected = true;
+  }
+
+  @override
+  void markDisconnected() {
+    _connected = false;
+  }
+
   final String f = '\x0c';
   final String esc = '\x1b\x09';
   WebScoketUtils? webScoketUtils;
