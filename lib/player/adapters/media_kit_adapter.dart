@@ -102,6 +102,12 @@ class MediaKitAdapter implements UnifiedPlayer {
           await native.setProperty('http-proxy', proxyUrl);
         }
 
+        // 去除 SSL 验证（默认开启）：让播放器内核也跳过 TLS 证书校验
+        if (SettingsService.to.proxy.disableSslVerify.v) {
+          await native.setProperty('tls-verify', 'no');
+          await native.setProperty('http-tls-verify', 'no');
+        }
+
         if (PlatformUtils.isMacOS) {
           await native.setProperty('hwdec', 'no');
         }
