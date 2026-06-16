@@ -14,7 +14,7 @@ class AppHttpOverrides extends HttpOverrides {
     bool disableSslVerify = true; // 默认开启（与 ProxySettingsController 默认值保持一致）
     try {
       // 启动早期 SettingsService 可能还没注册，此时退回到默认值
-      disableSslVerify = SettingsService.to.proxy.disableSslVerify.v;
+      disableSslVerify = SettingsService.to.proxy.disableSslVerify.value;
     } catch (_) {}
 
     if (disableSslVerify) {
