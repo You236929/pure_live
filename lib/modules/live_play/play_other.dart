@@ -150,7 +150,7 @@ class EnhancedListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       dense: dense,
-      leading: CommonAvatar(avatarUrl: room.avatar, fallbackName: room.nick, dense: dense),
+      leading: CommonAvatar(avatarUrl: room.avatar, siteKey: room.platform, fallbackName: room.nick, dense: dense),
       title: Text(
         room.title!,
         maxLines: 1,

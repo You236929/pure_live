@@ -246,7 +246,10 @@ class _TaskCard extends GetView<RecorderController> {
             height: 90,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: CachedNetworkImageProvider(task.cover, cacheManager: CustomImageCacheManager.instance),
+                image: CachedNetworkImageProvider(
+                  ImageProxyUtil.proxyImageUrl(task.cover, siteKey: task.platform, width: 300, height: 169),
+                  cacheManager: CustomImageCacheManager.instance,
+                ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -508,7 +511,7 @@ class _TaskCard extends GetView<RecorderController> {
                               radius: 12,
                               backgroundImage: task.avatar.isNotEmpty
                                   ? CachedNetworkImageProvider(
-                                      task.avatar,
+                                      ImageProxyUtil.proxyImageUrl(task.avatar, siteKey: task.platform, width: 48, height: 48),
                                       cacheManager: CustomImageCacheManager.instance,
                                     )
                                   : null,

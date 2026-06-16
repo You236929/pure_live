@@ -62,7 +62,12 @@ class _AreaCardState extends State<AreaCard> {
 
                 child: displayImageUrl.isNotEmpty
                     ? CachedNetworkImage(
-                        imageUrl: displayImageUrl,
+                        imageUrl: ImageProxyUtil.proxyImageUrl(
+                          displayImageUrl,
+                          siteKey: widget.category.platform,
+                          width: 300,
+                          height: 300,
+                        ),
                         cacheManager: CustomImageCacheManager.instance,
                         fit: BoxFit.cover,
                         placeholder: (context, url) =>
