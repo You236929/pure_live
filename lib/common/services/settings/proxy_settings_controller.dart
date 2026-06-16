@@ -27,6 +27,11 @@ class ProxySettingsController extends GetxController {
   void onInit() {
     super.onInit();
 
+    final missingImageProxySites = AppConsts.supportSites.where((site) => !imageProxySites.contains(site)).toList();
+    if (missingImageProxySites.isNotEmpty) {
+      imageProxySites.v = [...imageProxySites.v, ...missingImageProxySites];
+    }
+
     ever<bool>(enableAppProxy, (_) => _refreshDioConnections());
     ever<String>(appProxyHost, (_) => _refreshDioConnections());
     ever<int>(appProxyPort, (_) => _refreshDioConnections());

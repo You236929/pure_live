@@ -5,8 +5,13 @@ import 'interface/live_site.dart';
 import 'package:pure_live/common/index.dart';
 import 'package:pure_live/core/site/cc_site.dart';
 import 'package:pure_live/core/site/iptv_site.dart';
+import 'package:pure_live/core/site/yy_site.dart';
+import 'package:pure_live/core/site/soop_site.dart';
+import 'package:pure_live/core/site/twitch_site.dart';
+import 'package:pure_live/core/site/pandatv_site.dart';
 import 'package:pure_live/core/site/bilibili_site.dart';
 import 'package:pure_live/core/site/kuaishou_site.dart';
+import 'package:pure_live/core/site/stripchat_site.dart';
 
 class Sites {
   static const String allSite = "all";
@@ -17,6 +22,11 @@ class Sites {
   static const String kuaishouSite = "kuaishou";
   static const String ccSite = "cc";
   static const String iptvSite = "iptv";
+  static const String pandatvSite = "pandatv";
+  static const String soopSite = "soop";
+  static const String stripchatSite = "stripchat";
+  static const String twitchSite = "twitch";
+  static const String yySite = "yy";
   static List<Site> get supportSites => [
     Site(id: "bilibili", name: i18n("site_bilibili"), logo: "assets/images/bilibili_2.png", liveSite: BiliBiliSite()),
     Site(id: "douyu", name: i18n("site_douyu"), logo: "assets/images/douyu.png", liveSite: DouyuSite()),
@@ -24,6 +34,11 @@ class Sites {
     Site(id: "douyin", name: i18n("site_douyin"), logo: "assets/images/douyin.png", liveSite: DouyinSite()),
     Site(id: "kuaishou", name: i18n("site_kuaishou"), logo: "assets/images/kuaishou.png", liveSite: KuaishowSite()),
     Site(id: "cc", name: i18n("site_cc"), logo: "assets/images/cc.png", liveSite: CCSite()),
+    Site(id: "pandatv", name: i18n("site_pandatv"), logo: "assets/images/pandatv.png", liveSite: PandaTvSite()),
+    Site(id: "soop", name: i18n("site_soop"), logo: "assets/images/soop.png", liveSite: SoopSite()),
+    Site(id: "stripchat", name: i18n("site_stripchat"), logo: "assets/images/stripchat.png", liveSite: StripChatSite()),
+    Site(id: "twitch", name: i18n("site_twitch"), logo: "assets/images/twitch.png", liveSite: TwitchSite()),
+    Site(id: "yy", name: i18n("site_yy"), logo: "assets/images/yy.png", liveSite: YYSite()),
     Site(id: "iptv", name: i18n("site_iptv"), logo: "assets/images/logo.png", liveSite: IptvSite()),
   ];
 
