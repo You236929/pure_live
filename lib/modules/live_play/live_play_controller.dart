@@ -556,42 +556,42 @@ class LivePlayController extends StateController with GetSingleTickerProviderSta
   // 打开外部APP
   // =========================================================
   Future<void> openNaviteAPP() async {
-    var naviteUrl = "";
-    var webUrl = "";
-    if (site == Sites.bilibiliSite) {
-      naviteUrl = "bilibili://live/${detail.value?.roomId}";
-      webUrl = "https://live.bilibili.com/${detail.value?.roomId}";
-    } else if (site == Sites.douyinSite) {
-      var args = detail.value?.danmakuData as DouyinDanmakuArgs;
-      naviteUrl = "snssdk1128://webcast_room?room_id=${args.roomId}";
-      webUrl = "https://live.douyin.com/${args.webRid}";
-    } else if (site == Sites.huyaSite) {
-      var args = detail.value?.danmakuData as HuyaDanmakuArgs;
-      naviteUrl =
-          "yykiwi://homepage/index.html?banneraction=https%3A%2F%2Fdiy-front.cdn.huya.com%2Fzt%2Ffrontpage%2Fcc%2Fupdate.html%3Fhyaction%3Dlive%26channelid%3D${args.subSid}%26subid%3D${args.subSid}%26liveuid%3D${args.subSid}%26screentype%3D1%26sourcetype%3D0%26fromapp%3Dhuya_wap%252Fclick%252Fopen_app_guide%26&fromapp=huya_wap/click/open_app_guide";
-      webUrl = "https://www.huya.com/${detail.value?.roomId}";
-    } else if (site == Sites.douyuSite) {
-      naviteUrl =
-          "douyulink://?type=90001&schemeUrl=douyuapp%3A%2F%2Froom%3FliveType%3D0%26rid%3D${detail.value?.roomId}";
-      webUrl = "https://www.douyu.com/${detail.value?.roomId}";
-    } else if (site == Sites.ccSite) {
-      log(detail.value!.userId.toString(), name: "cc_user_id");
-      naviteUrl = "cc://join-room/${detail.value?.roomId}/${detail.value?.userId}/";
-      webUrl = "https://cc.163.com/${detail.value?.roomId}";
-    } else if (site == Sites.kuaishouSite) {
-      naviteUrl =
-          "kwai://liveaggregatesquare?liveStreamId=${detail.value?.link}&recoStreamId=${detail.value?.link}&recoLiveStreamId=${detail.value?.link}&liveSquareSource=28&path=/rest/n/live/feed/sharePage/slide/more&mt_product=H5_OUTSIDE_CLIENT_SHARE";
-      webUrl = "https://live.kuaishou.com/u/${detail.value?.roomId}";
+    final liveRoom = detail.value;
+    if (liveRoom == null) {
+      return;
     }
+
+    final jumpToNativeUrl =
+        currentSite.liveSite.getJumpToNativeUrl(liveRoom);
+    final jumpToWebUrl =
+        currentSite.liveSite.getJumpToWebUrl(liveRoom);
+
+    if (jumpToNativeUrl.isEmpty && jumpToWebUrl.isEmpty) {
+      return;
+    }
+
+
     try {
-      if (Platform.isAndroid) {
-        await launchUrlString(naviteUrl, mode: LaunchMode.externalApplication);
-      } else {
-        await launchUrlString(webUrl, mode: LaunchMode.externalApplication);
+      if (Platform.isAndroid && jumpToNativeUrl.isNotEmpty) {
+        await launchUrlString(
+          jumpToNativeUrl,
+          mode: LaunchMode.externalApplication,
+        );
+      } else if (jumpToWebUrl.isNotEmpty) {
+        await launchUrlString(
+          jumpToWebUrl,
+          mode: LaunchMode.externalApplication,
+        );
       }
     } catch (e) {
+      if (jumpToWebUrl.isEmpty) {
+        return;
+      }
       ToastUtil.show(i18n('open_app_failed_fallback_browser'));
-      await launchUrlString(webUrl, mode: LaunchMode.externalApplication);
+      await launchUrlString(
+        jumpToWebUrl,
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 
