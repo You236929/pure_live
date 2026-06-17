@@ -28,12 +28,18 @@ class TwitchSite extends LiveSite with TwitchSiteMixin {
   @override
   LiveDanmaku getDanmaku() => TwitchDanmaku();
 
+  String get _cookie => userCookie.value.isNotEmpty ? userCookie.value : SettingsService.to.cookieManager.getCookie(id);
+
   Map<String, String> get headers => {
     'user-agent': defaultUa,
     'accept': 'application/vnd.twitchtv.v5+json',
     'client-id': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
     'device-id': (1000000000000000 + Random().nextInt(1 << 32)).toString(),
+    if (_cookie.isNotEmpty) 'Cookie': _cookie,
   };
+
+  @override
+  Map<String, String> getVideoHeaders() => headers;
 
   String _persisted(String operationName, String sha256Hash, Map<String, dynamic> variables) {
     return jsonEncode({
