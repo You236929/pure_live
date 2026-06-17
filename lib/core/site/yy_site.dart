@@ -10,7 +10,7 @@ import 'package:pure_live/model/live_category.dart';
 import 'package:pure_live/model/live_anchor_item.dart';
 import 'package:pure_live/model/live_play_quality.dart';
 
-class YYSite implements LiveSite {
+class YYSite extends LiveSite {
   @override
   String id = Sites.yySite;
 

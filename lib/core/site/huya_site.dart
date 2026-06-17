@@ -22,7 +22,7 @@ import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/tars/get_cdn_token_ex_req.dart';
 import 'package:pure_live/core/tars/get_cdn_token_ex_resp.dart';
 
-class HuyaSite implements LiveSite {
+class HuyaSite extends LiveSite {
   @override
   String id = "huya";
   static const baseUrl = "https://m.huya.com/";
