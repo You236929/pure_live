@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pure_live/common/models/live_room.dart';
 import 'package:pure_live/common/services/settings_service.dart';
+import 'package:pure_live/common/services/utils/hive_rx.dart';
 import 'package:pure_live/core/common/core_log.dart';
 import 'package:pure_live/core/sites.dart' show Site;
 import 'package:pure_live/get/get.dart';
