@@ -21,13 +21,19 @@ class YYSite extends LiveSite with YYSiteMixin {
   @override
   LiveDanmaku getDanmaku() => YyDanmaku();
 
+  String get _cookie => userCookie.value.isNotEmpty ? userCookie.value : SettingsService.to.cookieManager.getCookie(id);
+
   Map<String, String> get headers => {
     'Accept': '*/*',
     'Origin': 'https://www.yy.com',
     'Referer': 'https://www.yy.com/',
     'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+    if (_cookie.isNotEmpty) 'Cookie': _cookie,
   };
+
+  @override
+  Map<String, String> getVideoHeaders() => headers;
 
   @override
   Future<List<LiveCategory>> getCategores(int page, int pageSize) async {
