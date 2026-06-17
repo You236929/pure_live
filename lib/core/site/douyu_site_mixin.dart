@@ -11,6 +11,8 @@ import 'package:pure_live/core/interface/live_site_mixin.dart';
 import 'package:pure_live/core/sites.dart' show Site;
 import 'package:pure_live/plugins/locale_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'dart:math';
+import 'dart:convert';
 
 mixin DouyuSiteMixin on LiveSite {
   /// ------------------ 登录
@@ -211,5 +213,90 @@ mixin DouyuSiteMixin on LiveSite {
     ));
 
     return list;
+  }
+
+  @override
+  bool isSupportBatchUpdateLiveStatus() {
+    return true;
+  }
+
+  @override
+  Future<List<LiveRoom>> getLiveRoomDetailList({required List<LiveRoom> list}) async {
+    if (list.isEmpty) {
+      return list;
+    }
+
+    /// 分页获取，每页 20 个
+    var size = 20;
+    var futureList = <Future<List<LiveRoom>>>[];
+    for (var i = 0; i < list.length; i += size) {
+      var end = min(i + size, list.length);
+      var subList = list.sublist(i, end);
+      var future = _getLiveRoomDetailListPart(list: subList);
+      futureList.add(future);
+    }
+    final rooms = await Future.wait(futureList);
+    return rooms.expand((e) => e).toList();
+  }
+
+  Future<List<LiveRoom>> _getLiveRoomDetailListPart({required List<LiveRoom> list}) async {
+    if (list.isEmpty) {
+      return list;
+    }
+    var idList = list.map((room) => room.roomId!).toList();
+    var rids = idList.join(",");
+
+    try {
+      var result = await HttpClient.instance.postJson(
+        "https://apiv2.douyucdn.cn/Livenc/UserRelation/getFollowRoomListByRid",
+        queryParameters: {},
+        data: {"rids": rids},
+        formUrlEncoded: true,
+        header: {
+          'referer': 'https://www.douyu.com/',
+          'content-type': 'application/x-www-form-urlencoded',
+          'user-agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43',
+        },
+      );
+
+      List roomList;
+      if (result is String) {
+        roomList = json.decode(result)["data"]["room_list"];
+      } else {
+        roomList = result["data"]["room_list"];
+      }
+
+      List<LiveRoom> rsList = [];
+      for (var roomInfo in roomList) {
+        var isLiving = roomInfo["show_status"] == 1;
+        var tmp = LiveRoom(
+          cover: roomInfo["room_src"].toString(),
+          watching: roomInfo["hn"].toString(),
+          roomId: roomInfo["room_id"].toString(),
+          title: roomInfo["room_name"].toString(),
+          nick: roomInfo["nickname"].toString(),
+          avatar: roomInfo["avatar"].toString(),
+          introduction: roomInfo["close_notice"].toString(),
+          area: roomInfo["cate2_name"]?.toString() ?? '',
+          notice: roomInfo["close_notice"]?.toString() ?? "",
+          liveStatus: isLiving ? LiveStatus.live : LiveStatus.offline,
+          status: roomInfo["show_status"] == 1,
+          danmakuData: roomInfo["room_id"].toString(),
+          platform: Sites.douyuSite,
+          link: "https://www.douyu.com/${roomInfo["room_id"].toString()}",
+          isRecord: false,
+        );
+        rsList.add(tmp);
+      }
+      return rsList;
+    } catch (e) {
+      CoreLog.error(e);
+      for (var liveRoom in list) {
+        liveRoom.liveStatus = LiveStatus.offline;
+        liveRoom.status = false;
+      }
+      return list;
+    }
   }
 }
