@@ -10,7 +10,7 @@ import 'package:pure_live/core/common/convert_helper.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/danmaku/bilibili_danmaku.dart';
 
-class BiliBiliSite implements LiveSite {
+class BiliBiliSite extends LiveSite {
   @override
   String id = "bilibili";
 

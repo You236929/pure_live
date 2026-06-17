@@ -13,7 +13,7 @@ import 'package:pure_live/core/danmaku/empty_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/iptv/services/auto_sync_scheduler.dart';
 
-class IptvSite implements LiveSite {
+class IptvSite extends LiveSite {
   @override
   String id = 'iptv';
 

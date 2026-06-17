@@ -9,7 +9,7 @@ import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/danmaku/cc_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 
-class CCSite implements LiveSite {
+class CCSite extends LiveSite {
   @override
   String id = "cc";
 

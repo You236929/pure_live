@@ -13,7 +13,7 @@ import 'package:pure_live/core/danmaku/douyin_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/utils/douyin/douyin_request_params.dart';
 
-class DouyinSite implements LiveSite {
+class DouyinSite extends LiveSite {
   @override
   String id = "douyin";
 
