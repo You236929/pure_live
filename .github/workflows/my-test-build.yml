@@ -263,8 +263,8 @@ jobs:
       - name: 上传至 Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: ${{ steps.tag.outputs.tag }}
+          tag_name: v${{ steps.tag.outputs.tag }}
+          name: v${{ steps.tag.outputs.tag }}
           body_path: ${{ steps.release_body.outputs.body_path }}
           prerelease: ${{ fromJson(steps.version.outputs.content).prerelease }}
           generate_release_notes: false
