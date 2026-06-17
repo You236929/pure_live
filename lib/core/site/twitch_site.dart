@@ -178,13 +178,17 @@ class TwitchSite extends LiveSite with TwitchSiteMixin {
     if (token == null || sign == null) return [];
     final playSessionIds = ['bdd22331a986c7f1073628f2fc5b19da', '064bc3ff1722b6f53b0b5b8c01e46ca5'];
     final params = {
+      'acmb': 'e30=',
       'allow_source': 'true',
+      'cdm': 'wv',
+      'fast_bread': 'true',
       'p': DateTime.timestamp().second.toString(),
       'platform': 'web',
       'play_session_id': playSessionIds[Random().nextInt(playSessionIds.length)],
       'player_backend': 'mediaplayer',
       'player_version': '1.28.0-rc.1',
       'playlist_include_framerate': 'true',
+      'reassignments_supported': 'true',
       'sig': sign,
       'token': token,
       'transcode_mode': 'cbr_v1',

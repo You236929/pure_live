@@ -28,6 +28,9 @@ class StripChatSite extends LiveSite with StripChatSiteMixin {
     'Accept': '*/*',
     'Origin': baseUrl,
     'Referer': '$baseUrl/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
     'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
     if (_cookie.isNotEmpty) 'Cookie': _cookie,
@@ -63,6 +66,11 @@ class StripChatSite extends LiveSite with StripChatSiteMixin {
         'nic': 'true',
         'byw': 'false',
         'rcmGrp': 'A',
+        'rbCnGr': 'true',
+        'iem': 'true',
+        'mvPrm': 'false',
+        'decMb': 'false',
+        'ctryTop': 'false',
       },
       header: headers,
     ));
@@ -79,6 +87,7 @@ class StripChatSite extends LiveSite with StripChatSiteMixin {
     try {
       final result = decodeJson(await HttpClient.instance.getJson(
         '$apiBase/api/front/v2/models/username/$roomId/cam',
+        queryParameters: {},
         header: headers,
       ));
       final jsonObj = result['user']?['user'];
