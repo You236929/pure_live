@@ -17,8 +17,24 @@ class AreasListController extends ServerAllPageController<LiveArea> {
   AreasListController(this.site);
 
   @override
+  Future<bool> checkNetworkBeforeRequest() async {
+    if (AreaCacheManager.getSiteCategories(site.id).isNotEmpty) {
+      return true;
+    }
+    return super.checkNetworkBeforeRequest();
+  }
+
+  @override
   Future<List<LiveArea>> fetchAllServerData() async {
-    var result = await site.liveSite.getCategores(1, 1000);
+    List<LiveCategory> result;
+    try {
+      result = await site.liveSite.getCategores(1, 1000);
+      await AreaCacheManager.saveSiteCategories(site.id, result);
+      SettingsService.to.cache.refreshAreaCacheSize();
+    } catch (_) {
+      result = AreaCacheManager.getSiteCategories(site.id);
+      if (result.isEmpty) rethrow;
+    }
     var channels = result.map((e) => AppLiveCategory.fromLiveCategory(e)).toList();
     AreaPicMapper.updateAreaListMaps(channels);
 

@@ -10,6 +10,12 @@ class CacheController extends GetxController {
   /// 仅图片缓存大小，单位 MB
   final imageCacheSizeMB = 0.0.obs;
 
+  /// 仅分区数据缓存大小，单位 MB
+  final areaCacheSizeMB = 0.0.obs;
+
+  /// 各站点分区数据缓存大小，单位 MB
+  final areaCacheSiteSizeMB = <String, double>{}.obs;
+
   final refreshTurns = 0.0.obs;
 
   @override
@@ -27,6 +33,7 @@ class CacheController extends GetxController {
 
     double totalSizeBytes = 0;
     double imageBytes = 0;
+    final areaBytes = AreaCacheManager.totalBytes();
     for (final dir in targetDirs) {
       if (!dir.existsSync()) continue;
       try {
@@ -42,8 +49,10 @@ class CacheController extends GetxController {
         }
       } catch (_) {}
     }
+    totalSizeBytes += areaBytes;
     cacheSizeMB.value = totalSizeBytes / 1024 / 1024;
     imageCacheSizeMB.value = imageBytes / 1024 / 1024;
+    _updateAreaCacheSize(areaBytes);
     return cacheSizeMB.value;
   }
 
@@ -65,8 +74,11 @@ class CacheController extends GetxController {
     try {
       await CustomImageCacheManager.clearAll();
     } catch (_) {}
+    await AreaCacheManager.clearAll();
     cacheSizeMB.value = 0;
     imageCacheSizeMB.value = 0;
+    areaCacheSizeMB.value = 0;
+    areaCacheSiteSizeMB.clear();
   }
 
   /// 仅清除图片缓存
@@ -80,5 +92,29 @@ class CacheController extends GetxController {
   Future<void> handleManualRefresh() async {
     refreshTurns.value += 1.0;
     await getCacheSize();
+  }
+
+  void refreshAreaCacheSize() {
+    final areaBytes = AreaCacheManager.totalBytes();
+    _updateAreaCacheSize(areaBytes);
+  }
+
+  Future<void> clearAreaCache() async {
+    await AreaCacheManager.clearAll();
+    await getCacheSize();
+  }
+
+  Future<void> clearAreaCacheBySite(String siteId) async {
+    await AreaCacheManager.clearSite(siteId);
+    await getCacheSize();
+  }
+
+  void _updateAreaCacheSize(int areaBytes) {
+    areaCacheSizeMB.value = areaBytes / 1024 / 1024;
+    areaCacheSiteSizeMB.assignAll(
+      AreaCacheManager.siteBytesMap(Sites.supportSites.map((e) => e.id)).map(
+        (key, value) => MapEntry(key, value / 1024 / 1024),
+      ),
+    );
   }
 }

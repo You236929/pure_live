@@ -102,6 +102,82 @@ class CacheDataSettingsPage extends StatelessWidget {
               },
             ),
           ]),
+          const SizedBox(height: 16),
+          context.buildGroupTitle(i18n("area_cache_clean")),
+          context.buildModernCard([
+            Obx(() {
+              final areaSize = SettingsService.to.cache.areaCacheSizeMB.value;
+              return context.buildTile(
+                icon: Remix.apps_2_line,
+                title: i18n("area_cache_size"),
+                subtitle: i18n("area_cache_desc"),
+                trailing: Text(
+                  "${areaSize.toStringAsFixed(2)} MB",
+                  style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
+                ),
+                onTap: () => SettingsService.to.cache.handleManualRefresh(),
+              );
+            }),
+            context.buildTile(
+              icon: Remix.delete_bin_2_line,
+              title: i18n("clear_all_area_cache"),
+              subtitle: i18n("clear_all_area_cache_desc"),
+              onTap: () async {
+                final ok = await Get.dialog<bool>(
+                  AlertDialog(
+                    title: Text(i18n("confirm_clear_area_cache")),
+                    content: Text(i18n("confirm_clear_area_cache_desc")),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(Get.context!, false), child: Text(i18n("cancel"))),
+                      TextButton(
+                        onPressed: () => Navigator.pop(Get.context!, true),
+                        child: Text(i18n("clear"), style: TextStyle(color: theme.colorScheme.error)),
+                      ),
+                    ],
+                  ),
+                );
+                if (ok == true) {
+                  await SettingsService.to.cache.clearAreaCache();
+                  Get.snackbar(i18n("done"), i18n("area_cache_cleared"), snackPosition: SnackPosition.bottom);
+                }
+              },
+            ),
+            ...Sites.supportSites.map(
+              (site) => Obx(() {
+                final size = SettingsService.to.cache.areaCacheSiteSizeMB[site.id] ?? 0;
+                return context.buildTile(
+                  icon: Remix.folder_2_line,
+                  title: site.name,
+                  subtitle: i18n("site_area_cache"),
+                  trailing: Text(
+                    "${size.toStringAsFixed(2)} MB",
+                    style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
+                  ),
+                  onTap: size <= 0
+                      ? null
+                      : () async {
+                          final ok = await Get.dialog<bool>(
+                            AlertDialog(
+                              title: Text(i18n("confirm_clear_site_area_cache", args: {"site": site.name})),
+                              content: Text(i18n("confirm_clear_site_area_cache_desc")),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(Get.context!, false), child: Text(i18n("cancel"))),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(Get.context!, true),
+                                  child: Text(i18n("clear"), style: TextStyle(color: theme.colorScheme.error)),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (ok == true) {
+                            await SettingsService.to.cache.clearAreaCacheBySite(site.id);
+                            Get.snackbar(i18n("done"), i18n("site_area_cache_cleared"), snackPosition: SnackPosition.bottom);
+                          }
+                        },
+                );
+              }),
+            ),
+          ]),
           const SizedBox(height: 32),
         ],
       ),
