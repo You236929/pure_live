@@ -409,7 +409,7 @@ class LivePlayController extends StateController with GetSingleTickerProviderSta
   // 设置播放器
   // =========================================================
   void setPlayer() async {
-    Map<String, String> headers = {};
+    Map<String, String> headers = currentSite.liveSite.getVideoHeaders();
 
     if (currentSite.id == Sites.bilibiliSite) {
       headers = {
