@@ -74,6 +74,7 @@ jobs:
           retention-days: 7
 
   build-windows:
+    if: false
     runs-on: windows-latest
     steps:
       - name: 签出代码
@@ -151,6 +152,7 @@ jobs:
           retention-days: 7
 
   build-linux:
+    if: false
     runs-on: ubuntu-22.04
     steps:
       - name: 签出代码
@@ -205,8 +207,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-android
-      - build-windows
-      - build-linux
     permissions:
       contents: write
     steps:
@@ -244,18 +244,7 @@ jobs:
           |版本|下载地址|
           |---|---|
           |TV版|[pure_live_TV](https://github.com/liuchuancong/pure_live_TV/releases/latest)|
-          |Windows/macOS/Android版|[pure_live](https://github.com/liuchuancong/pure_live/releases/latest)|
-
-          ### 🖥️ Windows 版
-          - **EXE 安装包**：适合所有用户，自动创建快捷方式
-          - **MSIX 包**：现代应用格式，支持干净卸载（需 Windows 10/11）
-          - 适配：Win10/11 (x64)，自动创建桌面快捷方式
-          - 功能：多直播源、WebDAV、弹幕显示
-          - 快捷键：空格(播放/暂停) \| ESC(全屏切换) \| 上下键(音量) \| R(刷新)
-
-          ### 🐧 Linux 版
-          - **DEB 包**：适合 Debian / Ubuntu 系发行版
-          - **ZIP 包**：通用压缩包，适合手动解压运行
+          |Android版|[pure_live](https://github.com/liuchuancong/pure_live/releases/latest)|
 
           ### 📱 Android 版
           适配：Android 6.0+ | 功能：WebDAV、多播放器切换、弹幕、应用内更新
