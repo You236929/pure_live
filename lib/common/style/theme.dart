@@ -20,9 +20,9 @@ class MyTheme {
     if (customFonts.contains(selectedName)) {
       return selectedName;
     }
-    if (PlatformUtils.isWindows) {
-      return 'PingFang';
-    }
+    // if (PlatformUtils.isWindows) {
+    //   return 'PingFang';
+    // }
     if (PlatformUtils.isAndroid) {
       return GoogleFonts.roboto().fontFamily;
     }
