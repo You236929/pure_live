@@ -9,8 +9,9 @@ import 'package:pure_live/core/site/site_helper.dart';
 import 'package:pure_live/model/live_category.dart';
 import 'package:pure_live/model/live_anchor_item.dart';
 import 'package:pure_live/model/live_play_quality.dart';
+import 'package:pure_live/core/site/soop_site_mixin.dart';
 
-class SoopSite extends LiveSite {
+class SoopSite extends LiveSite with SoopSiteMixin {
   @override
   String id = Sites.soopSite;
 

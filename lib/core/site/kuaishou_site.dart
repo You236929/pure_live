@@ -13,8 +13,9 @@ import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/danmaku/empty_danmaku.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
+import 'package:pure_live/core/site/kuaishou_site_mixin.dart';
 
-class KuaishowSite extends LiveSite {
+class KuaishowSite extends LiveSite with KuaishouSiteMixin {
   @override
   String id = "kuaishou";
 
