@@ -5,8 +5,9 @@ import 'package:pure_live/common/models/live_room.dart';
 import 'package:pure_live/model/live_play_quality.dart';
 import 'package:pure_live/common/models/live_message.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
+import 'package:pure_live/core/interface/live_site_mixin.dart';
 
-class LiveSite {
+class LiveSite extends SiteMixin {
   String id = "";
   String name = "";
 
