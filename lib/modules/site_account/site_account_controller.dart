@@ -69,8 +69,8 @@ class SiteAccountController extends GetxController {
                     title: Text(i18n('web_login')),
                     subtitle: Text(i18n('web_login_subtitle')),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Get.back();
+                    onTap: () async {
+                      await _closeLoginOptions();
                       Get.toNamed(RoutePath.kSiteWebLogin, parameters: {'site': site.id});
                     },
                   ),
@@ -80,8 +80,8 @@ class SiteAccountController extends GetxController {
                     title: Text(i18n('qr_login')),
                     subtitle: Text(i18n('site_qr_login_subtitle', args: {'site': site.name})),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Get.back();
+                    onTap: () async {
+                      await _closeLoginOptions();
                       Get.toNamed(RoutePath.kSiteQRLogin, parameters: {'site': site.id});
                     },
                   ),
@@ -91,9 +91,9 @@ class SiteAccountController extends GetxController {
                     title: Text(i18n('cookie_login')),
                     subtitle: Text(i18n('cookie_login_subtitle')),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Get.back();
-                      doCookieLogin(site);
+                    onTap: () async {
+                      await _closeLoginOptions();
+                      await doCookieLogin(site);
                     },
                   ),
               ],
@@ -103,6 +103,11 @@ class SiteAccountController extends GetxController {
       ),
       isScrollControlled: true,
     );
+  }
+
+  Future<void> _closeLoginOptions() async {
+    Get.back();
+    await Future.delayed(const Duration(milliseconds: 250));
   }
 
   /// Cookie 登录。
