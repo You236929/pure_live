@@ -265,7 +265,7 @@ flutter:
   #     enable-swift-package-manager: false
   # 资源文件
   assets:
-    - assets/
+    # - assets/
     - assets/images/
     - assets/images/video/
     - assets/icons/
