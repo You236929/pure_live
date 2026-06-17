@@ -12,8 +12,9 @@ import 'package:pure_live/core/iptv/core/fuzzy_match.dart';
 import 'package:pure_live/core/danmaku/empty_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/iptv/services/auto_sync_scheduler.dart';
+import 'package:pure_live/core/site/iptv_site_mixin.dart';
 
-class IptvSite extends LiveSite {
+class IptvSite extends LiveSite with IptvSiteMixin {
   @override
   String id = 'iptv';
 

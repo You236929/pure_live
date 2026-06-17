@@ -1,0 +1,58 @@
+import 'package:pure_live/common/models/live_room.dart';
+import 'package:pure_live/core/interface/live_site.dart';
+import 'package:pure_live/core/interface/live_site_mixin.dart';
+
+mixin YYSiteMixin on LiveSite {
+  /// ------------------ 登录
+  @override
+  bool isSupportLogin() => false;
+
+  @override
+  String getJumpToNativeUrl(LiveRoom liveRoom) {
+    try {
+      return "https://www.yy.com/${liveRoom.roomId}";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  @override
+  String getJumpToWebUrl(LiveRoom liveRoom) {
+    try {
+      return "https://www.yy.com/${liveRoom.roomId}";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  @override
+  Future<SiteParseBean> parse(String url) async {
+    String realUrl = getHttpUrl(url);
+    var siteParseBean = emptySiteParseBean;
+    if (realUrl.isEmpty) return siteParseBean;
+    // 解析跳转
+    List<RegExp> regExpJumpList = [
+      // 网站 解析跳转
+    ];
+    siteParseBean = await parseJumpUrl(regExpJumpList, realUrl);
+    if (siteParseBean.roomId.isNotEmpty) {
+      return siteParseBean;
+    }
+
+    List<RegExp> regExpBeanList = [
+      // 虎牙
+      RegExp(r"yy\.com/([\d|\w]+)"),
+    ];
+    siteParseBean = await parseUrl(regExpBeanList, realUrl, id);
+    return siteParseBean;
+  }
+
+  @override
+  Map<String, String> getVideoHeaders() {
+    return {
+      'origin': 'https://www.yy.com',
+      'referer': 'https://www.yy.com/',
+      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+    };
+  }
+}

@@ -10,8 +10,9 @@ import 'package:pure_live/core/site/site_helper.dart';
 import 'package:pure_live/model/live_category.dart';
 import 'package:pure_live/model/live_anchor_item.dart';
 import 'package:pure_live/model/live_play_quality.dart';
+import 'package:pure_live/core/site/twitch_site_mixin.dart';
 
-class TwitchSite extends LiveSite {
+class TwitchSite extends LiveSite with TwitchSiteMixin {
   @override
   String id = Sites.twitchSite;
 

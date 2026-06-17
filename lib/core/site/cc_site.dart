@@ -8,8 +8,9 @@ import 'package:pure_live/model/live_play_quality.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/danmaku/cc_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
+import 'package:pure_live/core/site/cc_site_mixin.dart';
 
-class CCSite extends LiveSite {
+class CCSite extends LiveSite with CCSiteMixin {
   @override
   String id = "cc";
 

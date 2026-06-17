@@ -12,8 +12,9 @@ import 'package:pure_live/core/common/convert_helper.dart';
 import 'package:pure_live/core/danmaku/douyin_danmaku.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/utils/douyin/douyin_request_params.dart';
+import 'package:pure_live/core/site/douyin_site_mixin.dart';
 
-class DouyinSite extends LiveSite {
+class DouyinSite extends LiveSite with DouyinSiteMixin {
   @override
   String id = "douyin";
 

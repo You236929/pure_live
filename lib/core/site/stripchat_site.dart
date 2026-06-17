@@ -7,8 +7,9 @@ import 'package:pure_live/core/site/site_helper.dart';
 import 'package:pure_live/model/live_category.dart';
 import 'package:pure_live/model/live_anchor_item.dart';
 import 'package:pure_live/model/live_play_quality.dart';
+import 'package:pure_live/core/site/stripchat_site_mixin.dart';
 
-class StripChatSite extends LiveSite {
+class StripChatSite extends LiveSite with StripChatSiteMixin {
   @override
   String id = Sites.stripchatSite;
 

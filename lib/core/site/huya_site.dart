@@ -21,8 +21,9 @@ import 'package:pure_live/pkg/tars/net/base_tars_http.dart';
 import 'package:pure_live/core/interface/live_danmaku.dart';
 import 'package:pure_live/core/tars/get_cdn_token_ex_req.dart';
 import 'package:pure_live/core/tars/get_cdn_token_ex_resp.dart';
+import 'package:pure_live/core/site/huya_site_mixin.dart';
 
-class HuyaSite extends LiveSite {
+class HuyaSite extends LiveSite with HuyaSiteMixin {
   @override
   String id = "huya";
   static const baseUrl = "https://m.huya.com/";
