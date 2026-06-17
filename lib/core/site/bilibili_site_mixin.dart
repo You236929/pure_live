@@ -6,6 +6,7 @@ import 'package:pure_live/common/models/live_room.dart';
 import 'package:pure_live/common/services/settings_service.dart';
 import 'package:pure_live/common/services/utils/hive_rx.dart';
 import 'package:pure_live/core/common/core_log.dart';
+import 'package:pure_live/core/common/convert_helper.dart';
 import 'package:pure_live/core/common/http_client.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/interface/live_site_mixin.dart';
@@ -217,5 +218,65 @@ mixin BilibiliSiteMixin on LiveSite {
     ));
 
     return list;
+  }
+
+  @override
+  bool isSupportBatchUpdateLiveStatus() {
+    return true;
+  }
+
+  @override
+  Future<List<LiveRoom>> getLiveRoomDetailList({required List<LiveRoom> list}) async {
+    if (list.isEmpty) {
+      return List.empty();
+    }
+    var urlPart = list.map((e) => (e.userId!)).toList();
+    var result = await HttpClient.instance.postJson(
+      "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids",
+      data: {"uids": urlPart},
+      header: await getHeader(),
+    );
+
+    var items = <LiveRoom>[];
+    Map data = result["data"] ?? {};
+    var values = data.values;
+    for (var roomInfo in values) {
+      var uname = roomInfo["uname"].toString();
+      uname = uname.replaceAll(RegExp(r"<.*?em.*?>"), "");
+      var cover = roomInfo["keyframe"].toString();
+      if (cover == "") {
+        cover = roomInfo["cover_from_user"].toString();
+      }
+      if (cover == "") {
+        cover = roomInfo["cover"].toString();
+      }
+      if (cover == "") {
+        cover = roomInfo["background"].toString();
+      }
+      var liveStatus = (asT<int?>(roomInfo["live_status"]) ?? 0);
+      var flag = LiveStatus.offline;
+      if (liveStatus == 1) {
+        flag = LiveStatus.live;
+      } else if (liveStatus == 2) {
+        flag = LiveStatus.replay;
+      }
+      var room = LiveRoom(
+        roomId: roomInfo["room_id"].toString(),
+        title: roomInfo["title"].toString(),
+        cover: cover,
+        userId: roomInfo["uid"].toString(),
+        nick: roomInfo["uname"].toString(),
+        avatar: "${roomInfo["face"]}@100w.jpg",
+        watching: roomInfo["online"].toString(),
+        area: roomInfo['area_name'] ?? '',
+        status: liveStatus != 0,
+        liveStatus: flag,
+        link: "https://live.bilibili.com/${roomInfo["room_id"].toString()}",
+        notice: "",
+        platform: Sites.bilibiliSite,
+      );
+      items.add(room);
+    }
+    return items;
   }
 }

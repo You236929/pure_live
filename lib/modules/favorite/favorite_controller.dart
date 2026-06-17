@@ -5,6 +5,7 @@ import 'package:pure_live/plugins/event_bus.dart';
 import 'package:pure_live/modules/tags/live_tag.dart';
 import 'package:pure_live/modules/tags/tag_management_controller.dart';
 import 'package:pure_live/common/services/settings/refresh_config_controller.dart';
+import 'package:pure_live/modules/util/update_room_util.dart';
 
 class FavoriteController extends LocalReactivePageController<LiveRoom> with GetTickerProviderStateMixin {
   final TagManagementController tagController = Get.find<TagManagementController>();
@@ -316,34 +317,7 @@ class FavoriteController extends LocalReactivePageController<LiveRoom> with GetT
 
     _refreshStopwatch = Stopwatch()..start();
 
-    final int batch = refreshConfigController.maxConcurrentRefresh.value > 0
-        ? refreshConfigController.maxConcurrentRefresh.value
-        : 5;
-
-    for (int i = 0; i < valid.length; i += batch) {
-      final end = i + batch > valid.length ? valid.length : i + batch;
-      final batchRooms = valid.sublist(i, end);
-
-      try {
-        final futures = batchRooms
-            .map(
-              (room) => Sites.of(room.platform!).liveSite.getRoomDetail(roomId: room.roomId!, platform: room.platform!),
-            )
-            .toList();
-
-        final results = await Future.wait(futures);
-        for (var updated in results) {
-          final list = List<LiveRoom>.from(SettingsService.to.fav.favoriteRooms.v);
-          final idx = list.indexWhere((e) => e.roomId == updated.roomId && e.platform == updated.platform);
-          if (idx != -1) {
-            list[idx] = updated;
-            SettingsService.to.fav.favoriteRooms.v = list;
-          }
-        }
-      } catch (e) {
-        developer.log('Error refreshing room details: $e');
-      }
-    }
+    await UpdateRoomUtil.updateRoomList(valid, SettingsService.to.fav);
 
     _refreshStopwatch?.stop();
     _refreshStopwatch = null;
