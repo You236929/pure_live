@@ -47,20 +47,9 @@ mixin class SiteAccount {
     userName.value = '';
     isLogin.value = false;
 
-    switch (site.id) {
-      case 'bilibili':
-        SettingsService.to.cookieManager.bilibiliCookie.v = '';
-        SettingsService.to.cookieManager.bilibiliUid.v = 0;
-        break;
-      case 'huya':
-        SettingsService.to.cookieManager.huyaCookie.v = '';
-        break;
-      case 'douyin':
-        SettingsService.to.cookieManager.douyinCookie.v = '';
-        break;
-      case 'kuaishou':
-        SettingsService.to.cookieManager.kuaishouCookie.v = '';
-        break;
+    SettingsService.to.cookieManager.clearCookie(site.id);
+    if (site.id == 'bilibili') {
+      SettingsService.to.cookieManager.bilibiliUid.v = 0;
     }
 
     await CookieManager.instance().deleteAllCookies();
