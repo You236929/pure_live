@@ -11,8 +11,6 @@ import 'package:pure_live/modules/splash/splash_screen.dart';
 import 'package:pure_live/modules/version/version_page.dart';
 import 'package:pure_live/modules/web_dav/web_dav_page.dart';
 import 'package:pure_live/modules/toolbox/toolbox_page.dart';
-import 'package:pure_live/modules/account/account_bing.dart';
-import 'package:pure_live/modules/account/account_page.dart';
 import 'package:pure_live/modules/popular/popular_page.dart';
 import 'package:pure_live/modules/history/history_page.dart';
 import 'package:pure_live/modules/auth/user_manage_page.dart';
@@ -27,6 +25,7 @@ import 'package:pure_live/modules/toolbox/boolbox_binding.dart';
 import 'package:pure_live/modules/tags/tag_management_page.dart';
 import 'package:pure_live/modules/hot_areas/hot_areas_page.dart';
 import 'package:pure_live/modules/live_play/live_play_page.dart';
+import 'package:pure_live/modules/site_account/site_account_page.dart';
 import 'package:pure_live/modules/shield/danmu_shield_page.dart';
 import 'package:pure_live/modules/search/web_search_binding.dart';
 import 'package:pure_live/modules/settings/settings_binding.dart';
@@ -36,6 +35,7 @@ import 'package:pure_live/modules/tags/tag_management_binding.dart';
 import 'package:pure_live/modules/hot_areas/hot_areas_binding.dart';
 import 'package:pure_live/modules/live_play/live_play_binding.dart';
 import 'package:pure_live/modules/shield/danmu_shield_binding.dart';
+import 'package:pure_live/modules/site_account/site_account_binding.dart';
 import 'package:pure_live/modules/areas/favorite_areas_binding.dart';
 import 'package:pure_live/modules/account/huya/huya_cookie_page.dart';
 import 'package:pure_live/modules/area_rooms/area_rooms_binding.dart';
@@ -49,6 +49,9 @@ import 'package:pure_live/modules/account/douyin/douyin_cookie_page.dart';
 import 'package:pure_live/modules/account/douyin/douyin_cookie_binding.dart';
 import 'package:pure_live/modules/account/kuaishou/kuaishou_cookie_page.dart';
 import 'package:pure_live/modules/account/kuaishou/kuaishou_cookie_binding.dart';
+import 'package:pure_live/modules/site_account/login/qr_login_page.dart';
+import 'package:pure_live/modules/site_account/login/web_login_page.dart';
+import 'package:pure_live/modules/site_account/login/site_login_binding.dart';
 import 'package:pure_live/recorder/pages/record_settings/record_settings_page.dart';
 import 'package:pure_live/recorder/pages/record_settings/record_settings_binding.dart';
 
@@ -83,7 +86,7 @@ class AppPages {
       bindings: [LivePlayBinding()],
     ),
     //账号设置
-    GetPage(name: RoutePath.kSettingsAccount, page: () => const AccountPage(), bindings: [AccountBinding()]),
+    GetPage(name: RoutePath.kSettingsAccount, page: () => const SiteAccountPage(), bindings: [SiteAccountBinding()]),
     //哔哩哔哩Web登录
     GetPage(
       name: RoutePath.kBiliBiliWebLogin,
@@ -95,6 +98,16 @@ class AppPages {
       name: RoutePath.kBiliBiliQRLogin,
       page: () => const BiliBiliQRLoginPage(),
       bindings: [BilibiliQrLoginBinding()],
+    ),
+    GetPage(
+      name: RoutePath.kSiteWebLogin,
+      page: () => const SiteWebLoginPage(),
+      bindings: [SiteWebLoginBinding()],
+    ),
+    GetPage(
+      name: RoutePath.kSiteQRLogin,
+      page: () => const SiteQRLoginPage(),
+      bindings: [SiteQrLoginBinding()],
     ),
     GetPage(
       name: RoutePath.kSettingsDanmuShield,

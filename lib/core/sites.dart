@@ -27,19 +27,34 @@ class Sites {
   static const String stripchatSite = "stripchat";
   static const String twitchSite = "twitch";
   static const String yySite = "yy";
+  static final Map<String, LiveSite> _liveSites = {
+    bilibiliSite: BiliBiliSite(),
+    douyuSite: DouyuSite(),
+    huyaSite: HuyaSite(),
+    douyinSite: DouyinSite(),
+    kuaishouSite: KuaishowSite(),
+    ccSite: CCSite(),
+    pandatvSite: PandaTvSite(),
+    soopSite: SoopSite(),
+    stripchatSite: StripChatSite(),
+    twitchSite: TwitchSite(),
+    yySite: YYSite(),
+    iptvSite: IptvSite(),
+  };
+
   static List<Site> get supportSites => [
-    Site(id: "bilibili", name: i18n("site_bilibili"), logo: "assets/images/bilibili_2.png", liveSite: BiliBiliSite()),
-    Site(id: "douyu", name: i18n("site_douyu"), logo: "assets/images/douyu.png", liveSite: DouyuSite()),
-    Site(id: "huya", name: i18n("site_huya"), logo: "assets/images/huya.png", liveSite: HuyaSite()),
-    Site(id: "douyin", name: i18n("site_douyin"), logo: "assets/images/douyin.png", liveSite: DouyinSite()),
-    Site(id: "kuaishou", name: i18n("site_kuaishou"), logo: "assets/images/kuaishou.png", liveSite: KuaishowSite()),
-    Site(id: "cc", name: i18n("site_cc"), logo: "assets/images/cc.png", liveSite: CCSite()),
-    Site(id: "pandatv", name: i18n("site_pandatv"), logo: "assets/images/pandatv.png", liveSite: PandaTvSite()),
-    Site(id: "soop", name: i18n("site_soop"), logo: "assets/images/soop.png", liveSite: SoopSite()),
-    Site(id: "stripchat", name: i18n("site_stripchat"), logo: "assets/images/stripchat.png", liveSite: StripChatSite()),
-    Site(id: "twitch", name: i18n("site_twitch"), logo: "assets/images/twitch.png", liveSite: TwitchSite()),
-    Site(id: "yy", name: i18n("site_yy"), logo: "assets/images/yy.png", liveSite: YYSite()),
-    Site(id: "iptv", name: i18n("site_iptv"), logo: "assets/images/logo.png", liveSite: IptvSite()),
+    Site(id: bilibiliSite, name: i18n("site_bilibili"), logo: "assets/images/bilibili_2.png", liveSite: _liveSites[bilibiliSite]!),
+    Site(id: douyuSite, name: i18n("site_douyu"), logo: "assets/images/douyu.png", liveSite: _liveSites[douyuSite]!),
+    Site(id: huyaSite, name: i18n("site_huya"), logo: "assets/images/huya.png", liveSite: _liveSites[huyaSite]!),
+    Site(id: douyinSite, name: i18n("site_douyin"), logo: "assets/images/douyin.png", liveSite: _liveSites[douyinSite]!),
+    Site(id: kuaishouSite, name: i18n("site_kuaishou"), logo: "assets/images/kuaishou.png", liveSite: _liveSites[kuaishouSite]!),
+    Site(id: ccSite, name: i18n("site_cc"), logo: "assets/images/cc.png", liveSite: _liveSites[ccSite]!),
+    Site(id: pandatvSite, name: i18n("site_pandatv"), logo: "assets/images/pandatv.png", liveSite: _liveSites[pandatvSite]!),
+    Site(id: soopSite, name: i18n("site_soop"), logo: "assets/images/soop.png", liveSite: _liveSites[soopSite]!),
+    Site(id: stripchatSite, name: i18n("site_stripchat"), logo: "assets/images/stripchat.png", liveSite: _liveSites[stripchatSite]!),
+    Site(id: twitchSite, name: i18n("site_twitch"), logo: "assets/images/twitch.png", liveSite: _liveSites[twitchSite]!),
+    Site(id: yySite, name: i18n("site_yy"), logo: "assets/images/yy.png", liveSite: _liveSites[yySite]!),
+    Site(id: iptvSite, name: i18n("site_iptv"), logo: "assets/images/logo.png", liveSite: _liveSites[iptvSite]!),
   ];
 
   static Site of(String id) {

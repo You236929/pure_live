@@ -70,6 +70,10 @@ class RoutePath {
 
   static const kBiliBiliWebLogin = "/bilibili_web_login";
 
+  static const kSiteQRLogin = "/site_qr_login";
+
+  static const kSiteWebLogin = "/site_web_login";
+
   /// webview
   static const kWebview = "/webview_all";
 
