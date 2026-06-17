@@ -288,9 +288,9 @@ flutter:
     - family: CustomIcons
       fonts:
         - asset: assets/icons/CustomIcons.ttf
-    - family: PingFang
-      fonts:
-        - asset: assets/PingFangSC.ttf
+    # - family: PingFang
+    #   fonts:
+    #     - asset: assets/PingFangSC.ttf
 
 # FFmpeg配置
 # ffmpeg_kit_extended_config:
