@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:pure_live/common/models/live_area.dart';
-import 'package:pure_live/common/services/utils/hive_pref_util.dart';
+import 'package:pure_live/common/utils/hive_pref_util.dart';
 import 'package:pure_live/model/live_category.dart';
 
 class AreaCacheManager {
