@@ -142,45 +142,82 @@ class CacheDataSettingsPage extends StatelessWidget {
                 }
               },
             ),
-            ...Sites.supportSites.map(
-              (site) => Obx(() {
-                final size = SettingsService.to.cache.areaCacheSiteSizeMB[site.id] ?? 0;
-                return context.buildTile(
-                  icon: Remix.folder_2_line,
-                  title: site.name,
-                  subtitle: i18n("site_area_cache"),
-                  trailing: Text(
-                    "${size.toStringAsFixed(2)} MB",
-                    style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
-                  ),
-                  onTap: size <= 0
-                      ? null
-                      : () async {
-                          final ok = await Get.dialog<bool>(
-                            AlertDialog(
-                              title: Text(i18n("confirm_clear_site_area_cache", args: {"site": site.name})),
-                              content: Text(i18n("confirm_clear_site_area_cache_desc")),
-                              actions: [
-                                TextButton(onPressed: () => Navigator.pop(Get.context!, false), child: Text(i18n("cancel"))),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(Get.context!, true),
-                                  child: Text(i18n("clear"), style: TextStyle(color: theme.colorScheme.error)),
-                                ),
-                              ],
+            ExpansionTile(
+              initiallyExpanded: false,
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              childrenPadding: const EdgeInsets.only(bottom: 4),
+              leading: Icon(Remix.folder_2_line, color: theme.colorScheme.primary, size: 22),
+              title: Text(i18n("site_area_cache"), style: AppTextStyles.t15.copyWith(fontWeight: FontWeight.w600)),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  i18n("area_cache_desc"),
+                  style: AppTextStyles.t12.copyWith(color: theme.hintColor.withValues(alpha: 0.75)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              children: Sites.supportSites
+                  .map(
+                    (site) => Obx(() {
+                      final size = SettingsService.to.cache.areaCacheSiteSizeMB[site.id] ?? 0;
+                      return ListTile(
+                        contentPadding: const EdgeInsets.only(left: 24, right: 16, top: 2, bottom: 2),
+                        leading: _buildSiteLogo(site.logo),
+                        title: Text(site.name, style: AppTextStyles.t14.copyWith(fontWeight: FontWeight.w600)),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "${size.toStringAsFixed(2)} MB",
+                              style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
                             ),
-                          );
-                          if (ok == true) {
-                            await SettingsService.to.cache.clearAreaCacheBySite(site.id);
-                            Get.snackbar(i18n("done"), i18n("site_area_cache_cleared"), snackPosition: SnackPosition.bottom);
-                          }
-                        },
-                );
-              }),
+                            const SizedBox(width: 8),
+                            Icon(Remix.delete_bin_2_line, color: theme.hintColor.withValues(alpha: 0.45), size: 18),
+                          ],
+                        ),
+                        onTap: size <= 0
+                            ? null
+                            : () async {
+                                final ok = await Get.dialog<bool>(
+                                  AlertDialog(
+                                    title: Text(i18n("confirm_clear_site_area_cache", args: {"site": site.name})),
+                                    content: Text(i18n("confirm_clear_site_area_cache_desc")),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(Get.context!, false),
+                                        child: Text(i18n("cancel")),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(Get.context!, true),
+                                        child: Text(i18n("clear"), style: TextStyle(color: theme.colorScheme.error)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (ok == true) {
+                                  await SettingsService.to.cache.clearAreaCacheBySite(site.id);
+                                  Get.snackbar(i18n("done"), i18n("site_area_cache_cleared"), snackPosition: SnackPosition.bottom);
+                                }
+                              },
+                      );
+                    }),
+                  )
+                  .toList(),
             ),
           ]),
           const SizedBox(height: 32),
         ],
       ),
+    );
+  }
+
+  Widget _buildSiteLogo(String logo) {
+    return Image.asset(
+      logo,
+      width: 24,
+      height: 24,
+      errorBuilder: (_, _, _) => const Icon(Remix.live_line, size: 22),
     );
   }
 }
