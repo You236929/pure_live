@@ -91,6 +91,7 @@ class BiliBiliSite extends LiveSite with BilibiliSiteMixin {
       for (var item in result["data"]["list"]) {
         var roomItem = LiveRoom(
           roomId: item["roomid"].toString(),
+          userId: item["uid"].toString(),
           title: item["title"].toString(),
           cover: "${item["cover"]}@400w.jpg",
           nick: item["uname"].toString(),
@@ -193,6 +194,7 @@ class BiliBiliSite extends LiveSite with BilibiliSiteMixin {
       for (var item in result["data"]["list"]) {
         var roomItem = LiveRoom(
           roomId: item["roomid"].toString(),
+          userId: item["uid"].toString(),
           title: item["title"].toString(),
           cover: "${item["cover"]}@400w.jpg",
           area: item["area_name"].toString(),
@@ -359,6 +361,7 @@ class BiliBiliSite extends LiveSite with BilibiliSiteMixin {
           .toList();
       return LiveRoom(
         roomId: roomId,
+        userId: roomInfo["room_info"]["uid"].toString(),
         title: roomInfo["room_info"]["title"].toString(),
         cover: roomInfo["room_info"]["cover"].toString(),
         nick: roomInfo["anchor_info"]["base_info"]["uname"].toString(),
@@ -418,6 +421,7 @@ class BiliBiliSite extends LiveSite with BilibiliSiteMixin {
       title = title.replaceAll(RegExp(r"<.*?em.*?>"), "");
       var roomItem = LiveRoom(
         roomId: item["roomid"].toString(),
+        userId: item["uid"].toString(),
         title: title,
         cover: "https:${item["cover"]}@400w.jpg",
         nick: item["uname"].toString(),
