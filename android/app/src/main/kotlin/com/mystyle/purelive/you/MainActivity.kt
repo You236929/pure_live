@@ -1,4 +1,4 @@
-package com.mystyle.purelive
+package com.mystyle.purelive.you
 
 
 import com.ryanheise.audioservice.AudioServiceActivity
