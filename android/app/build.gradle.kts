@@ -31,7 +31,7 @@ val keystoreProperties = Properties().apply { // 同样添加了导入
 }
 
 android {
-    namespace = "com.mystyle.purelive"
+    namespace = "com.mystyle.purelive.you"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
     lint {
@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.mystyle.purelive"
+        applicationId = "com.mystyle.purelive.you"
         minSdk = flutter.minSdkVersion 
         multiDexEnabled = true 
         targetSdk = flutter.targetSdkVersion
