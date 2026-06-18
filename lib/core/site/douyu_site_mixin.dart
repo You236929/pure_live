@@ -8,7 +8,7 @@ import 'package:pure_live/core/common/core_log.dart';
 import 'package:pure_live/core/common/http_client.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/interface/live_site_mixin.dart';
-import 'package:pure_live/core/sites.dart' show Site;
+import 'package:pure_live/core/sites.dart';
 import 'package:pure_live/plugins/locale_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:math';
