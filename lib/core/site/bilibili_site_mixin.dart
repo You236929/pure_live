@@ -6,15 +6,16 @@ import 'package:pure_live/common/models/live_room.dart';
 import 'package:pure_live/common/services/settings_service.dart';
 import 'package:pure_live/common/services/utils/hive_rx.dart';
 import 'package:pure_live/core/common/core_log.dart';
-import 'package:pure_live/core/common/convert_helper.dart';
 import 'package:pure_live/core/common/http_client.dart';
 import 'package:pure_live/core/interface/live_site.dart';
 import 'package:pure_live/core/interface/live_site_mixin.dart';
-import 'package:pure_live/core/sites.dart' show Site;
+import 'package:pure_live/core/sites.dart';
 import 'package:pure_live/plugins/locale_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 mixin BilibiliSiteMixin on LiveSite {
+  Future<Map<String, String>> getHeader();
+
   final Map<String, String> loginHeaders = {
     'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/118.0.0.0",
     // 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
