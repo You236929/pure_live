@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:pure_live/core/index.dart';
+import 'package:pure_live/core/network/global_http_overrides.dart';
 import 'package:pure_live/app/router/app_pages.dart';
 import 'package:pure_live/core/platform/file_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -26,6 +27,7 @@ import 'package:pure_live/domains/wallpaper/domain/background_controller.dart';
 import 'package:pure_live/domains/live/presentation/favorite/favorite_controller.dart';
 
 void main(List<String> args) async {
+  HttpOverrides.global = AppHttpOverrides();
   // Flutter abbreviates every framework error after the first one. In release
   // builds that abbreviation hides the actual exception behind a diagnostics
   // node, making a grey player surface impossible to diagnose from logcat.

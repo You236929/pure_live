@@ -14,6 +14,7 @@ class ProxySettingsController extends GetxController {
 
   // app proxy settings
   final RxBool enableAppProxy = hiveBool('enableAppProxy', false);
+  final RxBool disableSslVerify = hiveBool('disableSslVerify', false);
   final RxString appProxyHost = hiveString('appProxyHost', '');
   final RxInt appProxyPort = hiveInt('appProxyPort', defaultProxyPort);
   @override
@@ -68,6 +69,7 @@ class ProxySettingsController extends GetxController {
       'enableAppProxy': enableAppProxy.v,
       'appProxyHost': proxy_routing.normalizeProxyHost(appProxyHost.v),
       'appProxyPort': proxy_routing.normalizeStoredProxyPort(appProxyPort.v),
+      'disableSslVerify': disableSslVerify.v,
     };
   }
 
@@ -80,6 +82,7 @@ class ProxySettingsController extends GetxController {
       'enableAppProxy': (json['enableAppProxy'] ?? false) as bool,
       'appProxyHost': proxy_routing.normalizeProxyHost((json['appProxyHost'] ?? '') as String),
       'appProxyPort': proxy_routing.normalizeStoredProxyPort((json['appProxyPort'] ?? defaultProxyPort) as int),
+      'disableSslVerify': (json['disableSslVerify'] ?? false) as bool,
     };
   }
 
@@ -91,6 +94,7 @@ class ProxySettingsController extends GetxController {
     enableAppProxy.v = parsed['enableAppProxy'];
     appProxyHost.v = parsed['appProxyHost'];
     appProxyPort.v = parsed['appProxyPort'];
+    disableSslVerify.v = parsed['disableSslVerify'];
   }
 
   static Map<String, dynamic> extractConfig(Map<String, dynamic>? rootConfig) {
@@ -102,6 +106,7 @@ class ProxySettingsController extends GetxController {
       'enableAppProxy': proxy['enableAppProxy'] ?? false,
       'appProxyHost': proxy_routing.normalizeProxyHost((proxy['appProxyHost'] ?? '') as String),
       'appProxyPort': proxy_routing.normalizeStoredProxyPort((proxy['appProxyPort'] ?? defaultProxyPort) as int),
+      'disableSslVerify': proxy['disableSslVerify'] ?? false,
     };
   }
 

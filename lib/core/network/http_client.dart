@@ -40,7 +40,7 @@ class HttpClient {
           // enabled the proxy, so we trust the proxy's certificate.
           client.badCertificateCallback = (cert, host, port) {
             final proxyCtrl = SettingsService.to.proxy;
-            return proxyCtrl.enableAppProxy.value;
+            return proxyCtrl.enableAppProxy.value || proxyCtrl.disableSslVerify.value;
           };
           client.findProxy = (uri) {
             final proxyCtrl = SettingsService.to.proxy;
