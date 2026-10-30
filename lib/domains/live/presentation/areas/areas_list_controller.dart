@@ -5,6 +5,7 @@ import 'package:pure_live/core/models/live_category.dart';
 import 'package:pure_live/domains/live/presentation/areas/area_display_config.dart';
 import 'package:pure_live/domains/live/presentation/areas/area_pic_mapper.dart';
 import 'package:pure_live/domains/live/data/platforms/sites.dart';
+import 'package:pure_live/core/utils/area_cache_manager.dart';
 
 class AreasListController extends ServerAllPageController<LiveArea> {
   final Site site;
@@ -33,6 +34,14 @@ class AreasListController extends ServerAllPageController<LiveArea> {
   AreasListController(this.site);
 
   @override
+  Future<bool> checkNetworkBeforeRequest() async {
+    if (AreaCacheManager.getSiteCategories(site.id).isNotEmpty) {
+      return true;
+    }
+    return super.checkNetworkBeforeRequest();
+  }
+
+  @override
   Future<List<LiveArea>> fetchAllServerData() async {
     if (isClosed) return [];
     var result = await site.liveSite.getCategores(1, 1000);
@@ -48,6 +57,10 @@ class AreasListController extends ServerAllPageController<LiveArea> {
     // Keep identity where possible; an obsolete index must not hide valid rows.
     final selectedIndex = channels.indexWhere((category) => category.id == selectedId);
     tabIndex.value = selectedIndex < 0 ? 0 : selectedIndex;
+
+    try {
+      await AreaCacheManager.saveSiteCategories(site.id, result);
+    } catch (_) {}
 
     _serverRawBackup.clear();
 
