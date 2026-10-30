@@ -1,7 +1,7 @@
 display_name: 纯粹直播
 msix_version: 3.1.19.4108
 publisher: "O=puretech.com, S=Some-State, C=CN"
-identity_name: com.mystyle.purelive
+identity_name: com.mystyle.purelive.you
 logo_path: assets/icons/icon.png
 capabilities: internetClient
 languages: zh-cn

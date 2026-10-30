@@ -30,7 +30,7 @@ if (requireReleaseSigning && !hasReleaseSigning) {
 }
 
 extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
-    namespace = "com.mystyle.purelive"
+    namespace = "com.mystyle.purelive.you"
     buildFeatures {
         buildConfig = true
     }
@@ -46,7 +46,7 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         targetCompatibility = JavaVersion.VERSION_17
     }
     defaultConfig {
-        applicationId = "com.mystyle.purelive"
+        applicationId = "com.mystyle.purelive.you"
         // ffmpeg_kit_extended_flutter 0.6.2 ships native binaries with an
         // Android API 26 floor. Advertising an older app floor lets installs
         // succeed on devices where the recording engine cannot be loaded.

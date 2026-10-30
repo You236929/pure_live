@@ -8,7 +8,7 @@
 PRODUCT_NAME = 纯粹直播
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.mystyle.pureLive
+PRODUCT_BUNDLE_IDENTIFIER = com.mystyle.purelive.you
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.mystyle. All rights reserved.
