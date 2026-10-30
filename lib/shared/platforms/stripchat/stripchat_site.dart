@@ -91,7 +91,7 @@ class StripChatSite extends LiveSite implements LiveSiteExternalRoomResolver {
       );
       final items = <LiveRoom>[];
       for (final item in (result['models'] as List?) ?? []) {
-        items.add(_parseRoom(item as Map));
+        items.add(_parseRoom(Map<String, dynamic>.from(item as Map)));
       }
       return items;
     } catch (_) {
@@ -110,7 +110,7 @@ class StripChatSite extends LiveSite implements LiveSiteExternalRoomResolver {
       );
       final jsonObj = result['user']?['user'];
       if (jsonObj is! Map) return liveroom.copyWith(status: false, liveStatus: LiveStatus.offline);
-      final room = _parseRoom(jsonObj);
+      final room = _parseRoom(Map<String, dynamic>.from(jsonObj as Map));
       room.data = result;
       return room;
     } catch (_) {
@@ -168,7 +168,7 @@ class StripChatSite extends LiveSite implements LiveSiteExternalRoomResolver {
       final groups = result['groups'] as Map?;
       final usernames = groups?['username'] as Map?;
       for (final item in (usernames?['models'] as List?) ?? []) {
-        items.add(_parseRoom(item as Map));
+        items.add(_parseRoom(Map<String, dynamic>.from(item as Map)));
       }
       return items;
     } catch (_) {
