@@ -19,6 +19,7 @@ import 'package:pure_live/shared/platforms/jdlive/jd_live_site.dart';
 import 'package:pure_live/shared/platforms/youtube/youtube_site.dart';
 import 'package:pure_live/shared/platforms/sixroom/sixroom_site.dart';
 import 'package:pure_live/shared/platforms/picarto/picarto_site.dart';
+import 'package:pure_live/shared/platforms/stripchat/stripchat_site.dart';
 import 'package:pure_live/shared/platforms/niconico/niconico_site.dart';
 import 'package:pure_live/shared/platforms/niconico/niconico_contract.dart';
 import 'package:pure_live/shared/platforms/showroom/showroom_site.dart';
@@ -104,6 +105,7 @@ class Sites {
   static const String tiktokSite = 'tiktok';
   static const String youtubeSite = 'youtube';
   static const String bigoSite = 'bigo';
+  static const String stripchatSite = PlatformIds.stripchat;
   static const String pandaLiveSite = 'pandalive';
   static const String fc2LiveSite = 'fc2live';
   static const String steamBroadcastSite = 'steambroadcast';
@@ -139,6 +141,7 @@ class Sites {
     tiktokSite,
     youtubeSite,
     bigoSite,
+      stripchatSite,
     pandaLiveSite,
     fc2LiveSite,
     steamBroadcastSite,
@@ -175,6 +178,7 @@ class Sites {
     yySite: '$_assetRoot/yy.png',
     acfunSite: '$_assetRoot/acfun.png',
     picartoSite: '$_assetRoot/picarto.png',
+    stripchatSite: '$_assetRoot/logo.png',
     twitcastingSite: '$_assetRoot/twitcasting.png',
     missevanSite: '$_assetRoot/missevan.png',
     inkeSite: '$_assetRoot/inke.png',
@@ -358,6 +362,7 @@ class Sites {
         liveSite: YouTubeSite(),
       ),
       bigoSite => Site(id: bigoSite, name: i18n('site_bigo'), logo: logoForId(bigoSite), liveSite: BigoSite()),
+      stripchatSite => Site(id: stripchatSite, name: i18n('site_stripchat'), logo: logoForId(stripchatSite), liveSite: StripChatSite()),
       pandaLiveSite => Site(
         id: pandaLiveSite,
         name: i18n('site_pandalive'),
@@ -447,6 +452,7 @@ class Sites {
       tiktokSite,
       youtubeSite,
       bigoSite,
+      stripchatSite,
       pandaLiveSite,
       fc2LiveSite,
       steamBroadcastSite,

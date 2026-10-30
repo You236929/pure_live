@@ -37,6 +37,7 @@ class CookieSettingsController extends GetxController {
   final RxString soopCookie = hiveString('soopCookie', '');
   final RxString yyCookie = hiveString('yyCookie', '');
   final RxString bigoCookie = hiveString('bigoCookie', '');
+  final RxString stripchatCookie = hiveString('stripchatCookie', '');
 
   @override
   void onInit() {
@@ -57,6 +58,7 @@ class CookieSettingsController extends GetxController {
       soopCookie,
       yyCookie,
       bigoCookie,
+      stripchatCookie,
     ]) {
       final normalized = normalizeAccountCookie(cookie.v);
       if (normalized != cookie.v) cookie.v = normalized;
@@ -76,6 +78,7 @@ class CookieSettingsController extends GetxController {
       soopCookie,
       yyCookie,
       bigoCookie,
+      stripchatCookie,
     ]) {
       if (value.v.isNotEmpty) return true;
     }
@@ -98,6 +101,7 @@ class CookieSettingsController extends GetxController {
     soopCookie.v = '';
     yyCookie.v = '';
     bigoCookie.v = '';
+    stripchatCookie.v = '';
     bilibiliUid.v = 0;
     clearDouyuSession();
   }

@@ -2017,6 +2017,7 @@
   "youtube_quality_hls_auto": "HLS Auto",
   "youtube_quality_dash_auto": "DASH Auto",
   "site_bigo": "Bigo Live",
+  "site_stripchat": "StripChat",
   "bigo_directory_scope": "The official public directory is a finite recommendation snapshot, not a complete catalog. Filter current recommendations by host or title; exact Bigo IDs and official room URLs are queried separately.",
   "bigo_category_public": "Public recommendations",
   "bigo_chat_notice": "Directory user_count is shown as current viewers only for active cards; missing room-detail values stay unknown.",

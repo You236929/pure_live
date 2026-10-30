@@ -12,4 +12,5 @@ abstract final class PlatformIds {
   static const String huya = 'huya';
   static const String iptv = 'iptv';
   static const String yy = 'yy';
+  static const String stripchat = 'stripchat';
 }
