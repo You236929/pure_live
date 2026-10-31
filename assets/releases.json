@@ -2521,9 +2521,15 @@
       },
       {
         "name": "armeabi-v7a",
+<<<<<<< HEAD
         "size": "48.75mb",
         "downloads": 0,
         "url": "https://github.com/You236929/pure_live/releases/download/v2.0.22/app-armeabi-v7a-release.apk"
+=======
+        "size": "109.11mb",
+        "downloads": 2190,
+        "url": "https://github.com/liuchuancong/pure_live/releases/download/v2.0.22/app-armeabi-v7a-release.apk"
+>>>>>>> upstream/master
       },
       {
         "name": "x86_64",
@@ -2539,9 +2545,15 @@
       },
       {
         "name": "PureLive-2.0.22+33-windows-x64-setup.exe",
+<<<<<<< HEAD
         "size": "65.77mb",
         "downloads": 0,
         "url": "https://github.com/You236929/pure_live/releases/download/v2.0.22/PureLive-2.0.22%2B33-windows-x64-setup.exe"
+=======
+        "size": "65.76mb",
+        "downloads": 6337,
+        "url": "https://github.com/liuchuancong/pure_live/releases/download/v2.0.22/PureLive-2.0.22%2B33-windows-x64-setup.exe"
+>>>>>>> upstream/master
       },
       {
         "name": "PureLive-2.0.22+33-windows-x64.msix",
